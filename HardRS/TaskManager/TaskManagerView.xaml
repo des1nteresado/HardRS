@@ -1,0 +1,125 @@
+﻿<UserControl x:Class="HardRS.TaskManager.TaskManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HardRS.TaskManager"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="350"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="220"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Processes list:" FontSize="16" FontWeight="Bold" />
+            <Button Grid.Column="1" Content="Refresh list" FontSize="15" Background="Beige" Click="RefreshButton_OnClick"/>
+        </Grid>
+
+        <ListBox ItemsSource="{Binding Processes}"
+                 VerticalAlignment="Top"
+                 HorizontalContentAlignment="Stretch"
+                 SelectionChanged="TasksList_SelectionChanged"
+                 Grid.Row="1">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <Grid DockPanel.Dock="Top" Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="1">Process id</Label>
+                            <Label Grid.Column="2">Process name</Label>
+                        </Grid>
+                        <ScrollViewer>
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </DockPanel>
+                </ControlTemplate>
+            </ListBox.Template>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{Binding KeepAlive}" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked"/>
+                        <TextBlock Text="{Binding Id}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding ProcessName}" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Name="Priorities" VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" Content="Change priority" FontSize="15" Background="AliceBlue" Click="ChangePriority_OnClick"/>
+            <Button Grid.Column="3" Content="Kill process" FontSize="15" Background="Red" Click="KillProcess_OnClick"/>
+        </Grid>
+
+        <Label Grid.Row="3" Content="Selected process info:" FontSize="16" FontWeight="Bold" />
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Process id:" />
+            <Label Grid.Row="0" Grid.Column="1" Content="{Binding SelectedProcess.Id, Mode=OneWay}" />
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Process name:" />
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding SelectedProcess.ProcessName, Mode=OneWay}" />
+
+            <Label Grid.Row="2" Grid.Column="0" Content="Nonpaged memory size:" />
+            <Label Grid.Row="2" Grid.Column="1" Content="{Binding SelectedProcess.NonpagedSystemMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="3" Grid.Column="0" Content="Paged memory size:" />
+            <Label Grid.Row="3" Grid.Column="1" Content="{Binding SelectedProcess.PagedMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="4" Grid.Column="0" Content="Private memory size:" />
+            <Label Grid.Row="4" Grid.Column="1" Content="{Binding SelectedProcess.PrivateMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="5" Grid.Column="0" Content="Virtual memory size:" />
+            <Label Grid.Row="5" Grid.Column="1" Content="{Binding SelectedProcess.VirtualMemorySize64, Mode=OneWay}" />
+
+            <Label Grid.Row="6" Grid.Column="0" Content="Start time:" />
+            <Label Grid.Row="6" Grid.Column="1" Content="{Binding SelectedProcess.StartTime, Mode=OneWay}" />
+
+            <Label Grid.Row="7" Grid.Column="0" Content="Threads number:" />
+            <Label Grid.Row="7" Grid.Column="1" Content="{Binding SelectedProcess.Threads.Count, Mode=OneWay}" />
+
+            <Label Grid.Row="8" Grid.Column="0" Content="Priority:" />
+            <Label Grid.Row="8" Grid.Column="1" Content="{Binding SelectedProcess.PriorityClass, Mode=OneWay}" />
+        </Grid>
+    </Grid>
+</UserControl>

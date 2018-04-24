@@ -1,0 +1,87 @@
+﻿<Window x:Class="HardRS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HardRS"
+        xmlns:tsk="clr-namespace:HardRS.TaskManager"
+        xmlns:hm="clr-namespace:HardRS.HardwareManager"
+        
+        mc:Ignorable="d"
+        Title="MainWindow" Height="760" Width="525" WindowStyle="ThreeDBorderWindow">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <TabControl Background="LightGray" >
+            <TabItem Header="RSS">
+                <Grid Background="LightGray">
+                    <WebBrowser x:Name="Browser" HorizontalAlignment="Left" Height="205" Margin="173,34,0,0" VerticalAlignment="Top" Width="303"/>
+                    <Button Content="Button" HorizontalAlignment="Left" Margin="40,56,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+                </Grid>
+            </TabItem>
+            <!--<TabItem x:Name="smartphonesTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Height="10" Width="10" Fill="Black" />
+                        <TextBlock Margin="3">Other</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="67*"/>
+                            <ColumnDefinition Width="189*"/>
+                        </Grid.ColumnDefinitions>
+                        <ProgressBar Margin="10,22,362.8,560.8" Maximum="2500" Value="{Binding ElementName=textBox1, Path=Text}" Name="cpuBar" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2">
+                            <ProgressBar.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleY="-1"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </ProgressBar.RenderTransform>
+                        </ProgressBar>
+                        <TextBox x:Name="textBox1" Height="23" TextWrapping="Wrap" Margin="10,70,282.8,547.8" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="textBox2" TextWrapping="Wrap" Margin="112.6,5,35.8,585.8" Grid.Column="1"/>
+                        <TextBox x:Name="textBox3" TextWrapping="Wrap" Margin="112.6,60,35.8,525.8" Grid.Column="1"/>
+                        <TextBox x:Name="textBox4" TextWrapping="Wrap" Margin="112.6,122,35.8,462.8" Grid.Column="1"/>
+                        <TextBox x:Name="textBox5" TextWrapping="Wrap" Margin="112.6,183,35.8,401.8" Grid.Column="1"/>
+                        <TextBox x:Name="textBoxHard1" TextWrapping="Wrap" Margin="8,246,282.8,345.8" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2">
+                            <TextBox.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleY="-1"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </TextBox.RenderTransform>
+                        </TextBox>
+                        <TextBox x:Name="textBoxHard2" TextWrapping="Wrap" Margin="8,96,282.8,494.8" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="textBoxHard3" TextWrapping="Wrap" Margin="8,127,282.8,480.8" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="textBoxHard4" TextWrapping="Wrap" Margin="8,165,282.8,442.8" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="textBoxHard5" TextWrapping="Wrap" Margin="8,203,282.8,401.8" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="textBoxHard6" TextWrapping="Wrap" Margin="112.6,270,35.8,314.8" Grid.Column="1"/>
+
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>-->
+            <TabItem Header="Hardware Info" >
+                <TabItem.Content>
+                    <Grid>
+                        <hm:HardwareManagerView/>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem Header="TaskManager" Background="DeepPink">
+                <TabItem.Content>
+                    <Grid>
+                        <tsk:TaskManagerView/>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
