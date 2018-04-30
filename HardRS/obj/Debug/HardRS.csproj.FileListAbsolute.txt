@@ -42,5 +42,5 @@ D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\TaskManager\Tas
 D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardwareManager\HardwareManagerView.g.cs
 D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardwareManager\StyleBar.baml
 D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardwareManager\HardwareManagerView.baml
-D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csprojResolveAssemblyReference.cache
 D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\App.baml
+D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csprojResolveAssemblyReference.cache

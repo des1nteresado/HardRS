@@ -6,24 +6,32 @@
              xmlns:local="clr-namespace:HardRS.HardwareManager"
              xmlns:cpb="clr-namespace:HardRS.CircularProgressBar"
              mc:Ignorable="d" 
-             d:DesignHeight="760" d:DesignWidth="525">
+             d:DesignHeight="500" d:DesignWidth="900">
     <Grid Background="Azure">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <cpb:CircularProgressBar Grid.Row="0" StrokeThickness="5" Maximum="2600" Radius="100"
-                                 Value="{Binding WorkerState}" 
-                                 Text="{Binding WorkerText, Mode=OneWay}"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <cpb:CircularProgressBar Grid.Column="0" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Value="{Binding ProgressCPU}" 
+                                 Text="{Binding ProgressCPUText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-        <cpb:CircularProgressBar Grid.Row="1" StrokeThickness="5" Maximum="2600" Radius="100"
-                                 Value="{Binding WorkerState}" 
-                                 Text="{Binding WorkerText, Mode=OneWay}"
+        <cpb:CircularProgressBar Grid.Column="1" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Value="{Binding ProgressMEM}" 
+                                 Text="{Binding ProgressMEMText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-        <cpb:CircularProgressBar Grid.Row="2" StrokeThickness="5" Maximum="2600" Radius="100"
-                                 Value="{Binding WorkerState}" 
-                                 Text="{Binding WorkerText, Mode=OneWay}"
+        <cpb:CircularProgressBar Grid.Column="2" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Value="{Binding ProgressHDD}" 
+                                 Text="{Binding ProgressHDDText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
+        <ListBox x:Name="ListOfHardware" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" FontSize="18"/>
     </Grid>
 </UserControl>

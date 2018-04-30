@@ -13,7 +13,7 @@ namespace HardRS.TaskManager
     {
         public ViewModel()
         {
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
             timer.Tick += UpdateProcesses;
             timer.Start();
         }

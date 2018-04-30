@@ -8,13 +8,13 @@
         xmlns:hm="clr-namespace:HardRS.HardwareManager"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="760" Width="525" WindowStyle="ThreeDBorderWindow">
+        Title="MainWindow" Height="510" Width="900" WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="0" />
         </Grid.RowDefinitions>
-        <TabControl Background="LightGray" >
+        <TabControl Background="LightGray" Margin="0,0,0,0.2" >
             <TabItem Header="RSS">
                 <Grid Background="LightGray">
                     <WebBrowser x:Name="Browser" HorizontalAlignment="Left" Height="205" Margin="173,34,0,0" VerticalAlignment="Top" Width="303"/>

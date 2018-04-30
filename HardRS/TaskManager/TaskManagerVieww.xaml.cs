@@ -58,7 +58,6 @@ namespace HardRS.TaskManager
         {
             var viewModel = (ViewModel)DataContext;
             viewModel.KillSelectedProcess();
-            viewModel.UpdateProcesses(sender, e);
         }
 
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
