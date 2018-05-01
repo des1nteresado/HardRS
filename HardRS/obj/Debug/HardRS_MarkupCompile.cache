@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\
 HardRS
 none
 false
 DEBUG;TRACE
-D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\App.xaml
-41126476017
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\App.xaml
+51070014214
 
-241627020528
-20-589978117
-HardwareManager\HardwareManagerView.xaml;MainWindow.xaml;HardwareManager\StyleBar.xaml;TaskManager\TaskManagerView.xaml;
+21-1296591776
+21-1797247218
+HardwareManager\HardwareManagerView.xaml;MainWindow.xaml;HardwareManager\StyleBar.xaml;RSSReader\RSSReaderView.xaml;TaskManager\TaskManagerView.xaml;
 
-True
+False
 

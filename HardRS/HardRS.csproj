@@ -54,6 +54,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,6 +85,9 @@
     </Compile>
     <Compile Include="HardwareManager\MainViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="RSSReader\RSSReaderView.xaml.cs">
+      <DependentUpon>RSSReaderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskManager\TaskManagerView.xaml.cs">
       <DependentUpon>TaskManagerView.xaml</DependentUpon>
     </Compile>
@@ -100,10 +104,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Channel.cs" />
-    <Compile Include="Classes\ChannelContext.cs" />
-    <Compile Include="Classes\ImageOfChannel.cs" />
-    <Compile Include="Classes\Items.cs" />
+    <Compile Include="RSSReader\Channel.cs" />
+    <Compile Include="RSSReader\ChannelContext.cs" />
+    <Compile Include="RSSReader\ImageOfChannel.cs" />
+    <Compile Include="RSSReader\Items.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -111,6 +115,10 @@
     <Page Include="HardwareManager\StyleBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RSSReader\RSSReaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TaskManager\TaskManagerView.xaml">
       <SubType>Designer</SubType>

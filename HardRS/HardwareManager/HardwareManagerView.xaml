@@ -33,5 +33,8 @@
                                  Text="{Binding ProgressHDDText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
         <ListBox x:Name="ListOfHardware" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" FontSize="18"/>
+        <ListBox x:Name="ListOfHardware2" Grid.Row="3" Grid.Column="3" FontSize="14"/>
+
+
     </Grid>
 </UserControl>

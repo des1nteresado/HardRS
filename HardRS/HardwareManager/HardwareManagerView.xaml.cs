@@ -26,6 +26,7 @@ namespace HardRS.HardwareManager
         ManagementObjectSearcher searcher8 =  new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
         ManagementObjectSearcher searcher12 = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
         ManagementObjectSearcher searcher13 = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_DiskDrive");
+        ManagementObjectSearcher searchercputemp = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
 
         public HardwareManagerView()
         {
@@ -66,6 +67,14 @@ namespace HardRS.HardwareManager
                 " Model:" + queryObj["Model"] +
                 " SerialNumber:" + queryObj["SerialNumber"] +
                 " Size:" + Math.Round(Convert.ToDouble(queryObj["Size"]) / 1024 / 1024 / 1024, 2) + " Gb");
+            }
+            foreach (ManagementObject obj in searchercputemp.Get())
+            {
+                Double temp = Convert.ToDouble(obj["CurrentTemperature"].ToString()) - 2732;
+                temp = temp * 0.1;
+                string name = obj["InstanceName"].ToString();
+                ListOfHardware2.Items.Add(name + " " + temp);
+                // ну, и в TList теперь их (temp и name), к примеру
             }
         }
     }

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:HardRS"
         xmlns:tsk="clr-namespace:HardRS.TaskManager"
         xmlns:hm="clr-namespace:HardRS.HardwareManager"
+        xmlns:rsr="clr-namespace:HardRS.RSSReader"
         
         mc:Ignorable="d"
         Title="MainWindow" Height="510" Width="900" WindowStyle="ToolWindow">
@@ -16,10 +17,11 @@
         </Grid.RowDefinitions>
         <TabControl Background="LightGray" Margin="0,0,0,0.2" >
             <TabItem Header="RSS">
-                <Grid Background="LightGray">
-                    <WebBrowser x:Name="Browser" HorizontalAlignment="Left" Height="205" Margin="173,34,0,0" VerticalAlignment="Top" Width="303"/>
-                    <Button Content="Button" HorizontalAlignment="Left" Margin="40,56,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-                </Grid>
+                <TabItem.Content>
+                    <Grid>
+                        <rsr:RSSReaderView />
+                    </Grid>
+                </TabItem.Content>
             </TabItem>
             <!--<TabItem x:Name="smartphonesTab">
                 <TabItem.Header>
