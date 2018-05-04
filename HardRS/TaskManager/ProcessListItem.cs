@@ -17,5 +17,6 @@ namespace HardRS.TaskManager
             FileName = process.StartInfo.FileName;
             Arguments = process.StartInfo.Arguments;
         }
+
     }
 }

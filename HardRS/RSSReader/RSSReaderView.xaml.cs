@@ -34,25 +34,47 @@ namespace HardRS.RSSReader
 
         bool getNewArticles(string fileSource)
         {
+            //Весь код помещен в try...catch
+            //для отслеживания  исключений
+            // и вывода их в виде сообщения.
             try
             {
+                //Инициализируем класс "XmlDocument". Который представляет XML-документ
+                //и включает в себя метод "Load",
+                //предназначенный для загрузки документа 
+                //с помощью объекта "XMLReader". 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(fileSource);
 
-                XmlNodeList nodeList;
+
+                //XmlNode root - содержит корневой элемент XML для 
+                //загруженного элемента.
                 XmlNode root = doc.DocumentElement;
+                //Получаем количество элементов item в RSS-потоке,
+                //используя SelectNodes() и
+                //выражение XPath, которое позволяет это сделать.
                 articles = new Items[root.SelectNodes("channel/item").Count];
+                // Инициализируем класс System.Xml.XmlNodeList, 
+                //содержащий все дочерние узлы данного потока (channel).
+                XmlNodeList nodeList;
                 nodeList = root.ChildNodes;
+
+                //Индикатор числового типа,
+                //для массива articles[].
                 int count = 0;
 
+                //Цикл для прохода по всем каналам в RSS-потоке.
                 foreach (XmlNode chanel in nodeList)
                 {
+                    //Цикл для прохода по всем элементам cnannel.  
                     foreach (XmlNode chanel_item in chanel)
                     {
+                        //Название канала RSS-потока.
                         if (chanel_item.Name == "title")
                         {
                             channel.Title = chanel_item.InnerText;
                         }
+                        //Описание канала RSS-потока.
                         if (chanel_item.Name == "description")
                         {
                             channel.Description = chanel_item.InnerText;
@@ -61,12 +83,13 @@ namespace HardRS.RSSReader
                         {
                             channel.Copyright = chanel_item.InnerText;
                         }
+                        //Ссылка на сайт RSS-потока.
                         if (chanel_item.Name == "link")
                         {
                             channel.Link = chanel_item.InnerText;
                         }
-
-                        if (chanel_item.Name == "img")
+                        //Получение изображения канала RSS-потока.
+                        if (chanel_item.Name == "image")
                         {
                             XmlNodeList imgList = chanel_item.ChildNodes;
                             foreach (XmlNode img_item in imgList)
@@ -185,7 +208,7 @@ namespace HardRS.RSSReader
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (getNewArticles("http://feeds.feedburner.com/applenewscomua") == true && generateHtml() == true)
+            if (getNewArticles("https://news.tut.by/rss/all.rss") == true && generateHtml() == true)
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
             }

@@ -33,17 +33,20 @@ namespace HardRS.TaskManager
         private void TasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var listBox = (ListBox)sender;
-
+            listBox.ScrollIntoView(listBox.SelectedItem);
             if (listBox.SelectedItems.Count > 0)
             {
                 var viewModel = (ViewModel)DataContext;
                 viewModel.SelectedProcess = ((ProcessListItem)listBox.SelectedItems[0]).Process;
+
             }
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ViewModel)DataContext;
+            listBox.SelectedIndex = 0;
+            listBox.ScrollIntoView(listBox.SelectedIndex);
             viewModel.UpdateProcesses(sender, e);
         }
 

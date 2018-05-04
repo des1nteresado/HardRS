@@ -11,6 +11,24 @@ namespace HardRS.TaskManager
 {
     public class ViewModel : INotifyPropertyChanged
     {
+        string _pattern;
+        public string Pattern
+        {
+            get => _pattern;
+            set
+            {
+                Set(ref _pattern, value);
+                try
+                {
+                    ProcessListItem pr = Processes.FirstOrDefault(s => s.ProcessName.StartsWith(Pattern));
+                    SelectedProcessName = pr;
+                    SelectedProcess = Process.GetProcessById(pr.Id);
+                }
+                catch { }
+            }
+        }
+
+
         public ViewModel()
         {
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
@@ -24,8 +42,17 @@ namespace HardRS.TaskManager
             get => _selectedProcess;
             set
             {
-                _selectedProcess = value;
-                OnPropertyChanged();
+                Set(ref _selectedProcess, value);
+            }
+        }
+
+        private ProcessListItem _selectedProcessName;
+        public ProcessListItem SelectedProcessName
+        {
+            get => _selectedProcessName;
+            set
+            {
+                Set(ref _selectedProcessName, value);
             }
         }
 
@@ -66,9 +93,11 @@ namespace HardRS.TaskManager
 
         public event PropertyChangedEventHandler PropertyChanged;
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void Set<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
+            field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

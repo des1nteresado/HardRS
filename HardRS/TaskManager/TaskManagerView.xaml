@@ -29,8 +29,10 @@
         <ListBox ItemsSource="{Binding Processes}"
                  VerticalAlignment="Top"
                  HorizontalContentAlignment="Stretch"
+                 SelectedItem="{Binding SelectedProcessName}"
                  SelectionChanged="TasksList_SelectionChanged"
-                 Grid.Row="1" Grid.Column="0">
+                 Grid.Row="1" Grid.Column="0"
+                 Name="listBox">
             <ListBox.Template>
                 <ControlTemplate>
                     <DockPanel LastChildFill="True">
@@ -38,10 +40,12 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="25"/>
                                 <ColumnDefinition Width="80"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="1">Process id</Label>
                             <Label Grid.Column="2">Process name</Label>
+                            <TextBox Grid.Column="3" FontSize="16" Text="{Binding Pattern, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                         <ScrollViewer>
                             <ItemsPresenter />
