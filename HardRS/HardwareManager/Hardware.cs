@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,83 +10,65 @@ namespace HardRS.HardwareManager
 {
     class Hardware : INotifyPropertyChanged
     {
-        private int _progressCPU;
-        private int _progressMEM;
-        private int _progressHDD;
+        private string processor;
+        private string videoController;
+        private string physMemory;
+        private string diskDrive;
 
-        public int ProgressCPU
+
+        public string Processor
         {
             get
             {
-                return _progressCPU;
+                return processor;
             }
             set
             {
-                if (value != 0)
-                {
-                    _progressCPU = value;
-                }
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressCPU"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressCPUText"));
-                }
+                processor = value;
+                OnPropertyChanged("Processor");
             }
         }
-
-        public int ProgressMEM
+        public string VideoController
         {
             get
             {
-                return _progressMEM;
+                return videoController;
             }
             set
             {
-                if (value != 0)
-                {
-                    _progressMEM = value;
-                }
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressMEM"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressMEMText"));
-                }
+                videoController = value;
+                OnPropertyChanged("VideoController");
             }
         }
-
-        public int ProgressHDD
+        public string PhysMemory
         {
             get
             {
-                return _progressHDD;
+                return physMemory;
             }
             set
             {
-                if (value != 0)
-                {
-                    _progressHDD = value;
-                }
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressHDD"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressHDDText"));
-                }
+                physMemory = value;
+                OnPropertyChanged("PhysMemory");
             }
         }
-
-        public string ProgressCPUText
+        public string DiskDrive
         {
-            get { return string.Format("{0} %", _progressCPU); }
-        }
-        public string ProgressMEMText
-        {
-            get { return string.Format("{0} %", _progressMEM); }
-        }
-        public string ProgressHDDText
-        {
-            get { return string.Format("{0} %", _progressHDD); }
+            get
+            {
+                return diskDrive;
+            }
+            set
+            {
+                diskDrive = value;
+                OnPropertyChanged("DiskDrive");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }

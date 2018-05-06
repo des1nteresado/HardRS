@@ -6,6 +6,26 @@
              xmlns:local="clr-namespace:HardRS.TaskManager"
              mc:Ignorable="d" 
              d:DesignHeight="410" d:DesignWidth="900">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style TargetType="ListBox">
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -22,14 +42,14 @@
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Processes list:" FontSize="16" FontWeight="Bold" />
+            <Label Grid.Column="0" Content="Processes list:" FontSize="18" FontWeight="Bold" />
             <Button Grid.Column="1" Content="Refresh list" FontSize="15" Background="Beige" Click="RefreshButton_OnClick"/>
         </Grid>
 
         <ListBox ItemsSource="{Binding Processes}"
                  VerticalAlignment="Top"
                  HorizontalContentAlignment="Stretch"
-                 SelectedItem="{Binding SelectedProcessName}"
+                 SelectedItem="{Binding SelectedProcessItem}"
                  SelectionChanged="TasksList_SelectionChanged"
                  Grid.Row="1" Grid.Column="0"
                  Name="listBox">
@@ -40,7 +60,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="25"/>
                                 <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="100"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="1">Process id</Label>
@@ -81,11 +101,11 @@
             <Button Grid.Column="3" Content="Kill process" FontSize="15" Background="Red" Click="KillProcess_OnClick"/>
         </Grid>
 
-        <Label Grid.Row="0" Grid.Column="1" Content="Selected process info:" FontSize="16" FontWeight="Bold" />
+        <Label Grid.Row="0" Grid.Column="1" Content="Selected process info:" FontSize="18" FontWeight="Bold" />
 
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="160"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>

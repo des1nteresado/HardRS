@@ -1,19 +1,19 @@
 ﻿HardRS
 
 
-winexe
+exe
 C#
 .cs
-D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\
 HardRS
 none
 false
 DEBUG;TRACE
-D:\Курсовой\RSS-HARDWARE-UTILITY\HardRS\HardRS\App.xaml
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\App.xaml
 51070014214
 
 251404639554
-21833668207
+21-1797247218
 HardwareManager\HardwareManagerView.xaml;MainWindow.xaml;HardwareManager\StyleBar.xaml;RSSReader\RSSReaderView.xaml;TaskManager\TaskManagerView.xaml;
 
 True

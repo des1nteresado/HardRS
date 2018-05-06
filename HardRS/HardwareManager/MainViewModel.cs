@@ -19,29 +19,12 @@ namespace HardRS.CircularProgressBar
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        //PerformanceCounter cpuSCounter = new PerformanceCounter("Сведения о процессоре", "Частота процессора", "_Total");
-        //PerformanceCounter cpuCounter = new PerformanceCounter("Сведения о процессоре", "% загруженности процессора", "_Total");
-        //PerformanceCounter sysCounter = new PerformanceCounter("System", "System Up Time");
-        //PerformanceCounter diskCounter = new PerformanceCounter("Физический диск", "% активности диска", "_Total");
-
-        //PerformanceCounter cpuCounter = new PerformanceCounter("Processor Information", "% Processor Time", "_Total");
-        //PerformanceCounter memCounter = new PerformanceCounter("Memory", "% Commited Bytes In Use");
-        //PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
-        //PerformanceCounter diskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Read Time", "_Total");
-
-        //    textBox1.Text = "" + (int)cpuSCounter.NextValue();
-        //    //textBox1.Text = "CPU " + (int)cpuCounter.NextValue() + "%";
-        //    textBox2.Text = "Available Memory:" + (int)memCounter.NextValue() + "MB";
-        //    textBox3.Text = "System Up Time:" + (int)sysCounter.NextValue()/60/60 + "Hours";
-        //    //textBox4.Text = "Физ. диск:" + (int)diskCounter.NextValue() + "%";
-        //    textBox4.Text = "Частота процессора:" + (int)cpuSCounter.NextValue();
-
         private BackgroundWorker _bgWorker = new BackgroundWorker();
 
-
-    private int _progressCPU;
+        private int _progressCPU;
         private int _progressMEM;
         private int _progressHDD;
+        private string _tempCPU;
 
         public int ProgressCPU
         {
@@ -101,6 +84,23 @@ namespace HardRS.CircularProgressBar
             }
         }
 
+        public string TempCPU
+        {
+            get
+            {
+                return _tempCPU;
+            }
+            set
+            {
+                _tempCPU = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("TempCPU"));
+                }
+            }
+        }
+
         public string ProgressCPUText
         {
             get { return string.Format("{0} %", _progressCPU); }
@@ -119,8 +119,8 @@ namespace HardRS.CircularProgressBar
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
 
-          
-            
+
+
             DispatcherTimer timer = new DispatcherTimer();
             timer.Tick += new EventHandler(Timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
@@ -153,12 +153,22 @@ namespace HardRS.CircularProgressBar
                 InstanceName = "_Total"
             };
 
+            UpdateVisitor updateVisitor = new UpdateVisitor();
+            Computer computer = new Computer()
+            {
+                CPUEnabled = true,
+                GPUEnabled = true,
+                HDDEnabled = true
+            };
+
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSStorageDriver_ATAPISmartData WHERE Active=True");
+
             try
             {
-            _bgWorker.RunWorkerAsync();
+                _bgWorker.RunWorkerAsync();
             }
 #pragma warning disable CS0168 // Переменная "e" объявлена, но ни разу не использована.
-            catch(Exception e)
+            catch (Exception e)
 #pragma warning restore CS0168 // Переменная "e" объявлена, но ни разу не использована.
             {
                 _bgWorker.WorkerSupportsCancellation = true;
@@ -172,9 +182,69 @@ namespace HardRS.CircularProgressBar
                 ProgressCPU = (int)cpuCounter.NextValue();
                 ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
                 ProgressHDD = (int)hddCounter.NextValue();
+                TempCPU = "";
+                //foreach (ManagementObject obj in searcher.Get())
+                //{
+                //    byte[] vendorSpec = obj["VendorSpecific"] as byte[];
+                //    if (vendorSpec != null)
+                //    {
+                //        Console.WriteLine("Температура SSD = " + vendorSpec[115]);
+                //    }
+
+                //}
+
+                computer.Open();
+                computer.Accept(updateVisitor);
+
+                for (int i = 0; i < computer.Hardware.Length; i++)
+                {
+                    if (computer.Hardware[i].HardwareType == HardwareType.CPU)
+                    {
+                        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                        {
+                            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                        }
+                    }
+                    if (computer.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer.Hardware[i].HardwareType == HardwareType.GpuAti)
+                    {
+                        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                        {
+                            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                        }
+                    }
+                    if (computer.Hardware[i].HardwareType == HardwareType.HDD)
+                    {
+                        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                        {
+                            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                        }
+                    }
+                }
+                computer.Close();
             };
         }
 
+
+        public class UpdateVisitor : IVisitor
+        {
+            public void VisitComputer(IComputer computer)
+            {
+                computer.Traverse(this);
+            }
+            public void VisitHardware(IHardware hardware)
+            {
+                hardware.Update();
+                foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
+            }
+            public void VisitSensor(ISensor sensor) { }
+            public void VisitParameter(IParameter parameter) { }
+        }
+       
+
+        //----------------------------------------------это моё
         public void GetCpuTemp(object sender, EventArgs e)
         {
             var computer = new Computer // ИСПОЛЬЗУЕМ КАСТОМНУЮ БИБЛИОТЕКУ OPENHARDWARE

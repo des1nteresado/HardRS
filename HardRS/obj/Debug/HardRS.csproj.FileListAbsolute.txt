@@ -58,7 +58,6 @@ D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\CircularProgressBar.xml
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\EntityFramework.xml
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\EntityFramework.SqlServer.xml
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\WinFormAnimation.xml
-D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csprojResolveAssemblyReference.cache
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardwareManager\HardwareManagerView.g.cs
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\MainWindow.g.cs
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\RSSReader\RSSReaderView.g.cs
@@ -79,3 +78,4 @@ D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csproj.GenerateR
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csproj.CoreCompileInputs.cache
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.exe
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.pdb
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csprojResolveAssemblyReference.cache

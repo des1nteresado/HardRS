@@ -20,9 +20,8 @@ namespace HardRS.TaskManager
                 Set(ref _pattern, value);
                 try
                 {
-                    ProcessListItem pr = Processes.FirstOrDefault(s => s.ProcessName.StartsWith(Pattern));
-                    SelectedProcessName = pr;
-                    SelectedProcess = Process.GetProcessById(pr.Id);
+                    SelectedProcessItem = Processes.FirstOrDefault(s => s.ProcessName.StartsWith(Pattern));
+                    SelectedProcess = Process.GetProcessById(SelectedProcessItem.Id);
                 }
                 catch { }
             }
@@ -46,13 +45,13 @@ namespace HardRS.TaskManager
             }
         }
 
-        private ProcessListItem _selectedProcessName;
-        public ProcessListItem SelectedProcessName
+        private ProcessListItem _selectedProcessItem;
+        public ProcessListItem SelectedProcessItem
         {
-            get => _selectedProcessName;
+            get => _selectedProcessItem;
             set
             {
-                Set(ref _selectedProcessName, value);
+                Set(ref _selectedProcessItem, value);
             }
         }
 
