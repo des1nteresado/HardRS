@@ -8,60 +8,60 @@ using System.Threading.Tasks;
 
 namespace HardRS.HardwareManager
 {
-    public class Hardware : INotifyPropertyChanged
+    public class VideoController : INotifyPropertyChanged
     {
-        private Processor processor;
-        private VideoController videoController;
-        private Memory memory;
-        private DiskDrive diskDrive;
+        private string title;
+        private string vcName;
+        private string vcMemory;
+        private string vcCpu;
 
 
-        public Processor Processor
+        public string Title
         {
             get
             {
-                return processor;
+                return title;
             }
             set
             {
-                processor = value;
-                OnPropertyChanged("Processor");
+                title = value;
+                OnPropertyChanged("Title");
             }
         }
-        public VideoController VideoController
+        public string VcName
         {
             get
             {
-                return videoController;
+                return vcName;
             }
             set
             {
-                videoController = value;
-                OnPropertyChanged("VideoController");
+                vcName = value;
+                OnPropertyChanged("VcName");
             }
         }
-        public Memory Memory
+        public string VcMemory
         {
             get
             {
-                return memory;
+                return vcMemory;
             }
             set
             {
-                memory = value;
-                OnPropertyChanged("Memory");
+                vcMemory = value;
+                OnPropertyChanged("VcMemory");
             }
         }
-        public DiskDrive DiskDrive
+        public string VcCpu
         {
             get
             {
-                return diskDrive;
+                return vcCpu;
             }
             set
             {
-                diskDrive = value;
-                OnPropertyChanged("DiskDrive");
+                vcCpu = value;
+                OnPropertyChanged("VcCpu");
             }
         }
 

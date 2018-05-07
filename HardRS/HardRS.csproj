@@ -81,12 +81,16 @@
     </ApplicationDefinition>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HardwareManager\CircularProgressBar.cs" />
+    <Compile Include="HardwareManager\Classes\DiskDrive.cs" />
+    <Compile Include="HardwareManager\Classes\Memory.cs" />
+    <Compile Include="HardwareManager\Classes\VideoController.cs" />
     <Compile Include="HardwareManager\Converters.cs" />
     <Compile Include="HardwareManager\Hardware.cs" />
     <Compile Include="HardwareManager\HardwareManagerView.xaml.cs">
       <DependentUpon>HardwareManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="HardwareManager\MainViewModel.cs" />
+    <Compile Include="HardwareManager\Classes\Processor.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RSSReader\RSSReaderView.xaml.cs">
       <DependentUpon>RSSReaderView.xaml</DependentUpon>

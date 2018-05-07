@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -19,7 +20,19 @@ namespace HardRS.CircularProgressBar
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private BackgroundWorker _bgWorker = new BackgroundWorker();
+        private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
+
+        ManagementObjectSearcher videoSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
+        ManagementObjectSearcher processorSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
+        ManagementObjectSearcher memorySrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+        ManagementObjectSearcher diskSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_DiskDrive");
+
+        public ObservableCollection<Hardware> Hardwares { get; set; }
+        public ObservableCollection<Processor> Processors { get; set; }
+
+        public ObservableCollection<VideoController> VideoControllers { get; set; }
+        public ObservableCollection<Memory> Memoryes { get; set; }
+        public ObservableCollection<DiskDrive> DiskDrives { get; set; }
 
         private int _progressCPU;
         private int _progressMEM;
@@ -116,6 +129,77 @@ namespace HardRS.CircularProgressBar
 
         public MainViewModel()
         {
+            Processor[] processor = new Processor[processorSrch.Get().Count];
+            VideoController[] video = new VideoController[videoSrch.Get().Count];
+            Memory[] memory = new Memory[memorySrch.Get().Count];
+            DiskDrive[] diskDrive = new DiskDrive[diskSrch.Get().Count];
+           
+            Processors = new ObservableCollection<Processor>();
+            VideoControllers = new ObservableCollection<VideoController>();
+            Memoryes = new ObservableCollection<Memory>();
+            DiskDrives = new ObservableCollection<DiskDrive>();
+
+            int c = 0;
+
+            foreach (ManagementObject queryObj in videoSrch.Get())
+            {
+                Console.WriteLine(videoSrch.Get().Count);
+                video[c] = new VideoController();
+                video[c].Title = "Video";
+                video[c].VcName = "Name: " + queryObj["Caption"];
+                video[c].VcMemory = "Memory: " + Convert.ToDouble(queryObj["AdapterRAM"]) / 1024 / 1024 + " MB";
+                video[c].VcCpu = "Processor: " + queryObj["VideoProcessor"];
+                VideoControllers.Add(video[c]);
+                c++;
+            }
+
+            int c1 = 0;
+            foreach (ManagementObject queryObj in processorSrch.Get())
+            {
+                processor[c1] = new Processor();
+                processor[c1].Title = "Processor";
+                processor[c1].CpuName = "Name: " + queryObj["Name"];
+                processor[c1].CpuCores = "Number Of Cores: " + queryObj["NumberOfCores"];
+                processor[c1].CpuId = "Processor Id: " + queryObj["ProcessorId"];
+                Processors.Add(processor[c1]);
+                c1++;
+            }
+
+            int c2 = 0;
+            foreach (ManagementObject queryObj in memorySrch.Get())
+            {
+                memory[c2] = new Memory();
+                memory[c2].Title = "Physical Memory";
+                memory[c2].MBar = "Memory bar #" + (c2 + 1);
+                memory[c2].MCapacity = "Capacity: " + Math.Round(System.Convert.ToDouble(queryObj["Capacity"]) / 1024 / 1024 / 1024, 2) + " GB ";
+                memory[c2].MSpeed = "Speed: " + queryObj["Speed"];
+                Memoryes.Add(memory[c2]);
+                c2++;
+            }
+
+            int c3= 0;
+            foreach (ManagementObject queryObj in diskSrch.Get())
+            {
+                diskDrive[c3] = new DiskDrive();
+                diskDrive[c3].Title = "Disk Drive";
+                diskDrive[c3].DiskModel = "Model:" + queryObj["Model"];
+                diskDrive[c3].DiskSize = "Size:" + Math.Round(Convert.ToDouble(queryObj["Size"]) / 1024 / 1024 / 1024, 2) + " Gb";
+                diskDrive[c3].DiskSerialNumber = "SerialNumber:" + queryObj["SerialNumber"];
+                DiskDrives.Add(diskDrive[c3]);
+                c3++;
+            }
+            //Hardwares = new ObservableCollection<Hardware>
+            //{
+            //    new Hardware
+            //    {
+            //    Processor = processor,
+            //    VideoController = video,
+            //    Memory = memory,
+            //    DiskDrive = diskDrive
+            //    }
+            //};
+      
+
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
 
@@ -242,7 +326,7 @@ namespace HardRS.CircularProgressBar
             public void VisitSensor(ISensor sensor) { }
             public void VisitParameter(IParameter parameter) { }
         }
-       
+
 
         //----------------------------------------------это моё
         public void GetCpuTemp(object sender, EventArgs e)

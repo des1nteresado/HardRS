@@ -8,60 +8,60 @@ using System.Threading.Tasks;
 
 namespace HardRS.HardwareManager
 {
-    public class Hardware : INotifyPropertyChanged
+    public class Processor : INotifyPropertyChanged
     {
-        private Processor processor;
-        private VideoController videoController;
-        private Memory memory;
-        private DiskDrive diskDrive;
+        private string title;
+        private string cpuName;
+        private string cpuCores;
+        private string cpuId;
 
 
-        public Processor Processor
+        public string Title
         {
             get
             {
-                return processor;
+                return title;
             }
             set
             {
-                processor = value;
-                OnPropertyChanged("Processor");
+                title = value;
+                OnPropertyChanged("Title");
             }
         }
-        public VideoController VideoController
+        public string CpuName
         {
             get
             {
-                return videoController;
+                return cpuName;
             }
             set
             {
-                videoController = value;
-                OnPropertyChanged("VideoController");
+                cpuName = value;
+                OnPropertyChanged("CpuName");
             }
         }
-        public Memory Memory
+        public string CpuCores
         {
             get
             {
-                return memory;
+                return cpuCores;
             }
             set
             {
-                memory = value;
-                OnPropertyChanged("Memory");
+                cpuCores = value;
+                OnPropertyChanged("CpuCores");
             }
         }
-        public DiskDrive DiskDrive
+        public string CpuId
         {
             get
             {
-                return diskDrive;
+                return cpuId;
             }
             set
             {
-                diskDrive = value;
-                OnPropertyChanged("DiskDrive");
+                cpuId = value;
+                OnPropertyChanged("CpuId");
             }
         }
 

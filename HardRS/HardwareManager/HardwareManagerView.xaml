@@ -32,9 +32,81 @@
                                  Value="{Binding ProgressHDD}" 
                                  Text="{Binding ProgressHDDText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-        <ListBox x:Name="ListOfHardware" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" FontSize="18"/>
-        <Label x:Name="LabelTempCPU" Grid.Column="4" Background="LightBlue" Content="{Binding TempCPU}" />
+        <!--<ListBox Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Hardwares}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="18" Text="{Binding Path=Processor.Title}" />
+                            <TextBlock Text="{Binding Path=Processor.CpuName}" />
+                            <TextBlock Text="{Binding Path=Processor.CpuCores}" />
+                            <TextBlock Text="{Binding Path=Processor.CpuId}" />
+                            <TextBlock FontSize="18" Text="{Binding Path=VideoController.Title}" />
+                            <TextBlock Text="{Binding Path=VideoController.vcName}" />
+                            <TextBlock Text="{Binding Path=VideoController.vcMemory}" />
+                            <TextBlock Text="{Binding Path=VideoController.vcCpu}" />
+                            <TextBlock FontSize="18" Text="{Binding Path=Memory.Title}" />
+                            <TextBlock Text="{Binding Path=Memory.mBar}" />
+                            <TextBlock Text="{Binding Path=Memory.mCapacity}" />
+                            <TextBlock Text="{Binding Path=Memory.mSpeed}" />
+                            <TextBlock FontSize="18" Text="{Binding Path=DiskDrive.Title}" />
+                            <TextBlock Text="{Binding Path=DiskDrive.diskModel}" />
+                            <TextBlock Text="{Binding Path=DiskDrive.diskSize}" />
+                            <TextBlock Text="{Binding Path=DiskDrive.diskSerialNumber}" />
+                        </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>-->
 
+        <ListBox Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Processors}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
+                        <TextBlock Text="{Binding Path=CpuName}" />
+                        <TextBlock Text="{Binding Path=CpuCores}" />
+                        <TextBlock Text="{Binding Path=CpuId}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding VideoControllers}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
+                        <TextBlock Text="{Binding Path=VcName}" />
+                        <TextBlock Text="{Binding Path=VcMemory}" />
+                        <TextBlock Text="{Binding Path=VcCpu}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="3" ItemsSource="{Binding Memoryes}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
+                        <TextBlock Text="{Binding Path=MBar}" />
+                        <TextBlock Text="{Binding Path=MCapacity}" />
+                        <TextBlock Text="{Binding Path=MSpeed}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="3" ItemsSource="{Binding DiskDrives}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
+                        <TextBlock Text="{Binding Path=DiskModel}" />
+                        <TextBlock Text="{Binding Path=DiskSize}" />
+                        <TextBlock Text="{Binding Path=DiskSerialNumber}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label x:Name="LabelTempCPU" Grid.Column="4" Background="LightBlue" Content="{Binding TempCPU}" />
+        <Label Grid.Row="0" Grid.Column="3" Background="Red" Content="{Binding Processors.Title, Mode=OneWay}" />
 
     </Grid>
 </UserControl>
