@@ -8,26 +8,12 @@ using System.Threading.Tasks;
 
 namespace HardRS.HardwareManager
 {
-    public class VideoController : INotifyPropertyChanged
+    public class VideoController : Hardware, INotifyPropertyChanged
     {
-        private string title;
         private string vcName;
         private string vcMemory;
         private string vcCpu;
 
-
-        public string Title
-        {
-            get
-            {
-                return title;
-            }
-            set
-            {
-                title = value;
-                OnPropertyChanged("Title");
-            }
-        }
         public string VcName
         {
             get

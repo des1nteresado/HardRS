@@ -68,5 +68,9 @@ namespace HardRS.HardwareManager
             //}
            
         }
+
+        private void TextBlock_TextInput(object sender, TextCompositionEventArgs e)
+        {
+        }
     }
 }

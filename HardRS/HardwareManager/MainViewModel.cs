@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CircularProgressBarApp.mvvmSupport;
@@ -27,12 +28,14 @@ namespace HardRS.CircularProgressBar
         ManagementObjectSearcher memorySrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
         ManagementObjectSearcher diskSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_DiskDrive");
 
-        public ObservableCollection<Hardware> Hardwares { get; set; }
-        public ObservableCollection<Processor> Processors { get; set; }
+        // public ObservableCollection<Hardware> Hardwares { get; set; }
+        // public ObservableCollection<Processor> Processors { get; set; }
 
         public ObservableCollection<VideoController> VideoControllers { get; set; }
         public ObservableCollection<Memory> Memoryes { get; set; }
         public ObservableCollection<DiskDrive> DiskDrives { get; set; }
+
+        public List<Hardware> HardwareList;
 
         private int _progressCPU;
         private int _progressMEM;
@@ -133,11 +136,14 @@ namespace HardRS.CircularProgressBar
             VideoController[] video = new VideoController[videoSrch.Get().Count];
             Memory[] memory = new Memory[memorySrch.Get().Count];
             DiskDrive[] diskDrive = new DiskDrive[diskSrch.Get().Count];
-           
-            Processors = new ObservableCollection<Processor>();
+            HardwareList = new List<Hardware>();
+
+            // Processors = new ObservableCollection<Processor>();
             VideoControllers = new ObservableCollection<VideoController>();
             Memoryes = new ObservableCollection<Memory>();
             DiskDrives = new ObservableCollection<DiskDrive>();
+
+            Hardware hardware = new Hardware();
 
             int c = 0;
 
@@ -145,11 +151,13 @@ namespace HardRS.CircularProgressBar
             {
                 Console.WriteLine(videoSrch.Get().Count);
                 video[c] = new VideoController();
-                video[c].Title = "Video";
-                video[c].VcName = "Name: " + queryObj["Caption"];
+                video[c].Type = "Video";
+                video[c].Name = queryObj["Caption"].ToString();
                 video[c].VcMemory = "Memory: " + Convert.ToDouble(queryObj["AdapterRAM"]) / 1024 / 1024 + " MB";
                 video[c].VcCpu = "Processor: " + queryObj["VideoProcessor"];
                 VideoControllers.Add(video[c]);
+                HardwareList.Add(video[c]);
+                //hardware.VideoControllers.Add(video[c].VcName);
                 c++;
             }
 
@@ -157,11 +165,13 @@ namespace HardRS.CircularProgressBar
             foreach (ManagementObject queryObj in processorSrch.Get())
             {
                 processor[c1] = new Processor();
-                processor[c1].Title = "Processor";
-                processor[c1].CpuName = "Name: " + queryObj["Name"];
+                processor[c1].Type = "Processor";
+                processor[c1].Name = queryObj["Name"].ToString();
                 processor[c1].CpuCores = "Number Of Cores: " + queryObj["NumberOfCores"];
                 processor[c1].CpuId = "Processor Id: " + queryObj["ProcessorId"];
-                Processors.Add(processor[c1]);
+                // Processors.Add(processor[c1]);
+                HardwareList.Add(processor[c1]);
+                //hardware.Processors.Add(processor[c1].Title);
                 c1++;
             }
 
@@ -169,11 +179,13 @@ namespace HardRS.CircularProgressBar
             foreach (ManagementObject queryObj in memorySrch.Get())
             {
                 memory[c2] = new Memory();
-                memory[c2].Title = "Physical Memory";
-                memory[c2].MBar = "Memory bar #" + (c2 + 1);
+                memory[c2].Type = "Physical Memory";
+                memory[c2].Name = "Memory bar #" + (c2 + 1);
                 memory[c2].MCapacity = "Capacity: " + Math.Round(System.Convert.ToDouble(queryObj["Capacity"]) / 1024 / 1024 / 1024, 2) + " GB ";
                 memory[c2].MSpeed = "Speed: " + queryObj["Speed"];
                 Memoryes.Add(memory[c2]);
+                HardwareList.Add(memory[c2]);
+                // hardware.Memories.Add(memory[c2].Title);
                 c2++;
             }
 
@@ -181,13 +193,21 @@ namespace HardRS.CircularProgressBar
             foreach (ManagementObject queryObj in diskSrch.Get())
             {
                 diskDrive[c3] = new DiskDrive();
-                diskDrive[c3].Title = "Disk Drive";
-                diskDrive[c3].DiskModel = "Model:" + queryObj["Model"];
+                diskDrive[c3].Type = "Disk Drive";
+                diskDrive[c3].Name = queryObj["Model"].ToString();
                 diskDrive[c3].DiskSize = "Size:" + Math.Round(Convert.ToDouble(queryObj["Size"]) / 1024 / 1024 / 1024, 2) + " Gb";
                 diskDrive[c3].DiskSerialNumber = "SerialNumber:" + queryObj["SerialNumber"];
                 DiskDrives.Add(diskDrive[c3]);
+                HardwareList.Add(diskDrive[c3]);
+                // hardware.DiskDrives.Add(diskDrive[c3].Title);
+
+
                 c3++;
             }
+
+            Console.WriteLine(HardwareList[0].Type);
+
+
             //Hardwares = new ObservableCollection<Hardware>
             //{
             //    new Hardware
@@ -198,7 +218,7 @@ namespace HardRS.CircularProgressBar
             //    DiskDrive = diskDrive
             //    }
             //};
-      
+
 
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
@@ -362,6 +382,16 @@ namespace HardRS.CircularProgressBar
             //textBoxHard5.Text = temps[4];
             //textBoxHard6.Text = temps[5];
 
+        }
+
+        public ICollectionView Hardwares
+        {
+            get
+            {
+                var source = CollectionViewSource.GetDefaultView(this.HardwareList);
+                source.GroupDescriptions.Add(new PropertyGroupDescription("Type"));
+                return source;
+            }
         }
 
         #region INotifyPropertyChanged Member

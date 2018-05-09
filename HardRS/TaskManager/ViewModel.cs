@@ -26,7 +26,7 @@ namespace HardRS.TaskManager
                 catch { }
             }
         }
-
+        
 
         public ViewModel()
         {

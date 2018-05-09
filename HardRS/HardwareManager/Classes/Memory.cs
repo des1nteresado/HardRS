@@ -4,26 +4,12 @@ using System.Runtime.CompilerServices;
 
 namespace HardRS.HardwareManager
 {
-    public class Memory : INotifyPropertyChanged
+    public class Memory : Hardware, INotifyPropertyChanged
     {
-        private string title;
         private string mBar;
         private string mCapacity;
         private string mSpeed;
 
-
-        public string Title
-        {
-            get
-            {
-                return title;
-            }
-            set
-            {
-                title = value;
-                OnPropertyChanged("Title");
-            }
-        }
         public string MBar
         {
             get

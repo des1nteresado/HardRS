@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HardRS.CircularProgressBar.MainViewModel" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAGAABAASKBCAACAIACBoQAgAACQEAAAAIAAAAQ=</HashCode>
+      <FileName>HardwareManager\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.HardwareManager.DiskDrive" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAIAAEAAQAhAAEAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>HardwareManager\Classes\DiskDrive.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.HardwareManager.Memory" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAARAAgAEQAIAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HardwareManager\Classes\Memory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.HardwareManager.Processor" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIIAAABCAgAAQAAAAAAAIAAAACAA=</HashCode>
+      <FileName>HardwareManager\Classes\Processor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.HardwareManager.VideoController" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAIAQAQAAEAAAAAAIAAAAAAAgAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>HardwareManager\Classes\VideoController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.HardwareManager.Hardware" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAQAgAAFAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>HardwareManager\Hardware.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HardRS.TaskManager.ProcessListItem" Collapsed="true">
+    <Position X="6" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAAAAAAAAAAAAgAAAAAAAAAAAAAAIAQAAABAAAA=</HashCode>
+      <FileName>TaskManager\ProcessListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HardRS.TaskManager.TaskManagerView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAEAAAAAgAAAAABAAAAAAAAAABAIAAAAAAAAA=</HashCode>
+      <FileName>TaskManager\TaskManagerView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="HardRS.TaskManager.ViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQCABAAAAAAAQAAQgAGAAAEBAQAAAAAAAAA=</HashCode>
+      <FileName>TaskManager\ViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

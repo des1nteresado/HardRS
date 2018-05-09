@@ -20,6 +20,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+
         <cpb:CircularProgressBar Grid.Column="0" Grid.Row="2" StrokeThickness="5" Radius="70"
                                  Value="{Binding ProgressCPU}" 
                                  Text="{Binding ProgressCPUText, Mode=OneWay}"
@@ -57,7 +58,124 @@
             </ListBox.ItemTemplate>
         </ListBox>-->
 
-        <ListBox Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Processors}">
+        <TreeView Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Hardwares.Groups}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                    <TextBlock Text="{Binding Name}" FontSize="18"/>
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontSize="16">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding CpuCores}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding CpuId}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding VcMemory}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding VcCpu}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding MCapacity}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding MSpeed}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding DiskSize}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding DiskSerialNumber}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Height" Value="0" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </Trigger>
+                                                <Trigger Property="Foreground" Value="Black">
+                                                    <Setter Property="Text" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <!--<ListBox Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Processors}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
@@ -80,7 +198,15 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
+        </ListBox>-->
+        <!--<TreeView Name="GroupView" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Grid.RowSpan="2"  ItemsSource="{Binding}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type local:Processor}" ItemsSource="{Binding Processors}">
+                    <TextBlock Text="{Binding Path=Title}" />
+                </HierarchicalDataTemplate>
+             
+            </TreeView.Resources>
+        </TreeView>-->
         <ListBox Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="3" ItemsSource="{Binding Memoryes}">
             <ListBox.ItemTemplate>
                 <DataTemplate>

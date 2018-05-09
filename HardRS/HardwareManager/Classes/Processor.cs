@@ -8,26 +8,12 @@ using System.Threading.Tasks;
 
 namespace HardRS.HardwareManager
 {
-    public class Processor : INotifyPropertyChanged
+    public class Processor : Hardware, INotifyPropertyChanged
     {
-        private string title;
         private string cpuName;
         private string cpuCores;
         private string cpuId;
 
-
-        public string Title
-        {
-            get
-            {
-                return title;
-            }
-            set
-            {
-                title = value;
-                OnPropertyChanged("Title");
-            }
-        }
         public string CpuName
         {
             get

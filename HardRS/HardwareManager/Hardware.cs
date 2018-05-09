@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,61 +11,32 @@ namespace HardRS.HardwareManager
 {
     public class Hardware : INotifyPropertyChanged
     {
-        private Processor processor;
-        private VideoController videoController;
-        private Memory memory;
-        private DiskDrive diskDrive;
-
-
-        public Processor Processor
+        private string name;
+        private string type;
+        public string Name
         {
             get
             {
-                return processor;
+                return name;
             }
             set
             {
-                processor = value;
-                OnPropertyChanged("Processor");
+                name = value;
+                OnPropertyChanged("Name");
             }
         }
-        public VideoController VideoController
+        public string Type
         {
             get
             {
-                return videoController;
+                return type;
             }
             set
             {
-                videoController = value;
-                OnPropertyChanged("VideoController");
+                type = value;
+                OnPropertyChanged("Type");
             }
         }
-        public Memory Memory
-        {
-            get
-            {
-                return memory;
-            }
-            set
-            {
-                memory = value;
-                OnPropertyChanged("Memory");
-            }
-        }
-        public DiskDrive DiskDrive
-        {
-            get
-            {
-                return diskDrive;
-            }
-            set
-            {
-                diskDrive = value;
-                OnPropertyChanged("DiskDrive");
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
