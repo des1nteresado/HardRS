@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HardRS.HardwareManager"
              xmlns:cpb="clr-namespace:HardRS.CircularProgressBar"
+             xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
     <Grid Background="Azure">
@@ -21,44 +22,20 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <cpb:CircularProgressBar Grid.Column="0" Grid.Row="2" StrokeThickness="5" Radius="70"
-                                 Value="{Binding ProgressCPU}" 
-                                 Text="{Binding ProgressCPUText, Mode=OneWay}"
-                                 Style="{StaticResource CircularProgressBarStyle}" />
-        <cpb:CircularProgressBar Grid.Column="1" Grid.Row="2" StrokeThickness="5" Radius="70"
-                                 Value="{Binding ProgressMEM}" 
-                                 Text="{Binding ProgressMEMText, Mode=OneWay}"
-                                 Style="{StaticResource CircularProgressBarStyle}" />
         <cpb:CircularProgressBar Grid.Column="2" Grid.Row="2" StrokeThickness="5" Radius="70"
-                                 Value="{Binding ProgressHDD}" 
-                                 Text="{Binding ProgressHDDText, Mode=OneWay}"
+                                 Value="{Binding Progress.ProgressCPU}" 
+                                 Text="{Binding Progress.ProgressCPUText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-        <!--<ListBox Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Hardwares}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                        <StackPanel Margin="5">
-                            <TextBlock FontSize="18" Text="{Binding Path=Processor.Title}" />
-                            <TextBlock Text="{Binding Path=Processor.CpuName}" />
-                            <TextBlock Text="{Binding Path=Processor.CpuCores}" />
-                            <TextBlock Text="{Binding Path=Processor.CpuId}" />
-                            <TextBlock FontSize="18" Text="{Binding Path=VideoController.Title}" />
-                            <TextBlock Text="{Binding Path=VideoController.vcName}" />
-                            <TextBlock Text="{Binding Path=VideoController.vcMemory}" />
-                            <TextBlock Text="{Binding Path=VideoController.vcCpu}" />
-                            <TextBlock FontSize="18" Text="{Binding Path=Memory.Title}" />
-                            <TextBlock Text="{Binding Path=Memory.mBar}" />
-                            <TextBlock Text="{Binding Path=Memory.mCapacity}" />
-                            <TextBlock Text="{Binding Path=Memory.mSpeed}" />
-                            <TextBlock FontSize="18" Text="{Binding Path=DiskDrive.Title}" />
-                            <TextBlock Text="{Binding Path=DiskDrive.diskModel}" />
-                            <TextBlock Text="{Binding Path=DiskDrive.diskSize}" />
-                            <TextBlock Text="{Binding Path=DiskDrive.diskSerialNumber}" />
-                        </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>-->
+        <cpb:CircularProgressBar Grid.Column="3" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Value="{Binding Progress.ProgressMEM}" 
+                                 Text="{Binding Progress.ProgressMEMText, Mode=OneWay}"
+                                 Style="{StaticResource CircularProgressBarStyle}" />
+        <cpb:CircularProgressBar Grid.Column="4" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Value="{Binding Progress.ProgressHDD}" 
+                                 Text="{Binding Progress.ProgressHDDText, Mode=OneWay}"
+                                 Style="{StaticResource CircularProgressBarStyle}" />
 
-        <TreeView Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Hardwares.Groups}">
+        <TreeView Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" Grid.RowSpan="2" ItemsSource="{Binding Hardwares.Groups}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
                     <TextBlock Text="{Binding Name}" FontSize="18"/>
@@ -174,65 +151,14 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-
-        <!--<ListBox Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding Processors}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                        <TextBlock Text="{Binding Path=CpuName}" />
-                        <TextBlock Text="{Binding Path=CpuCores}" />
-                        <TextBlock Text="{Binding Path=CpuId}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" ItemsSource="{Binding VideoControllers}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                        <TextBlock Text="{Binding Path=VcName}" />
-                        <TextBlock Text="{Binding Path=VcMemory}" />
-                        <TextBlock Text="{Binding Path=VcCpu}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>-->
-        <!--<TreeView Name="GroupView" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Grid.RowSpan="2"  ItemsSource="{Binding}">
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type local:Processor}" ItemsSource="{Binding Processors}">
-                    <TextBlock Text="{Binding Path=Title}" />
-                </HierarchicalDataTemplate>
-             
-            </TreeView.Resources>
-        </TreeView>-->
-        <ListBox Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="3" ItemsSource="{Binding Memoryes}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                        <TextBlock Text="{Binding Path=MBar}" />
-                        <TextBlock Text="{Binding Path=MCapacity}" />
-                        <TextBlock Text="{Binding Path=MSpeed}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="3" ItemsSource="{Binding DiskDrives}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                        <TextBlock Text="{Binding Path=DiskModel}" />
-                        <TextBlock Text="{Binding Path=DiskSize}" />
-                        <TextBlock Text="{Binding Path=DiskSerialNumber}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Label x:Name="LabelTempCPU" Grid.Column="4" Background="LightBlue" Content="{Binding TempCPU}" />
-        <Label Grid.Row="0" Grid.Column="3" Background="Red" Content="{Binding Processors.Title, Mode=OneWay}" />
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label FontSize="18" Grid.Row="0" Content="{Binding Temp}" />
+        </Grid>
+        
+        <oxy:PlotView Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}"/>
 
     </Grid>
 </UserControl>

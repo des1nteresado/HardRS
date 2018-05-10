@@ -6,16 +6,15 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Management;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Threading;
-using CircularProgressBarApp.mvvmSupport;
 using HardRS.HardwareManager;
+using HardRS.HardwareManager.Classes;
 using OpenHardwareMonitor.Hardware;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace HardRS.CircularProgressBar
 {
@@ -23,111 +22,41 @@ namespace HardRS.CircularProgressBar
     {
         private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
 
+        public List<DataPoint> Points { get; set; }
+        double popl = 0;
+        double popl2;
+
         ManagementObjectSearcher videoSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
         ManagementObjectSearcher processorSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
         ManagementObjectSearcher memorySrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
         ManagementObjectSearcher diskSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_DiskDrive");
 
-        // public ObservableCollection<Hardware> Hardwares { get; set; }
-        // public ObservableCollection<Processor> Processors { get; set; }
-
-        public ObservableCollection<VideoController> VideoControllers { get; set; }
-        public ObservableCollection<Memory> Memoryes { get; set; }
-        public ObservableCollection<DiskDrive> DiskDrives { get; set; }
-
         public List<Hardware> HardwareList;
+        public Progress Progress { get; set; }
+        public LineSeries Lines { get; set; }
 
-        private int _progressCPU;
-        private int _progressMEM;
-        private int _progressHDD;
-        private string _tempCPU;
+        private PlotModel plotModel;
 
-        public int ProgressCPU
+        public PlotModel PlotModel
+        {
+            get { return plotModel; }
+            set { plotModel = value; OnPropertyChanged("PlotModel"); }
+        }
+
+        private string temp;
+
+        public string Temp
         {
             get
             {
-                return _progressCPU;
+                return temp;
             }
             set
             {
-                if (value != 0)
-                {
-                    _progressCPU = value;
-                }
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressCPU"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressCPUText"));
-                }
-            }
-        }
+                temp = value;
 
-        public int ProgressMEM
-        {
-            get
-            {
-                return _progressMEM;
-            }
-            set
-            {
-                if (value != 0)
-                {
-                    _progressMEM = value;
-                }
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressMEM"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressMEMText"));
-                }
-            }
-        }
-
-        public int ProgressHDD
-        {
-            get
-            {
-                return _progressHDD;
-            }
-            set
-            {
-                _progressHDD = value;
-
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressHDD"));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ProgressHDDText"));
-                }
-            }
-        }
-
-        public string TempCPU
-        {
-            get
-            {
-                return _tempCPU;
-            }
-            set
-            {
-                _tempCPU = value;
-
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("TempCPU"));
-                }
-            }
-        }
-
-        public string ProgressCPUText
-        {
-            get { return string.Format("{0} %", _progressCPU); }
-        }
-        public string ProgressMEMText
-        {
-            get { return string.Format("{0} %", _progressMEM); }
-        }
-        public string ProgressHDDText
-        {
-            get { return string.Format("{0} %", _progressHDD); }
+                OnPropertyChanged("Temp");
+            }   
         }
 
         public MainViewModel()
@@ -137,13 +66,20 @@ namespace HardRS.CircularProgressBar
             Memory[] memory = new Memory[memorySrch.Get().Count];
             DiskDrive[] diskDrive = new DiskDrive[diskSrch.Get().Count];
             HardwareList = new List<Hardware>();
-
-            // Processors = new ObservableCollection<Processor>();
-            VideoControllers = new ObservableCollection<VideoController>();
-            Memoryes = new ObservableCollection<Memory>();
-            DiskDrives = new ObservableCollection<DiskDrive>();
-
-            Hardware hardware = new Hardware();
+            Progress = new Progress();
+            Points = new List<DataPoint>();
+            PlotModel = new PlotModel { Title = "Температура датчиков" };
+            Lines = new LineSeries
+            {
+                Title = "Линейный график",
+                StrokeThickness = 3,
+                LineStyle = LineStyle.Automatic,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 5,
+                MarkerStroke = OxyColors.White,
+                MarkerFill = OxyColors.Automatic,
+                MarkerStrokeThickness = 1.5,
+            };
 
             int c = 0;
 
@@ -155,7 +91,6 @@ namespace HardRS.CircularProgressBar
                 video[c].Name = queryObj["Caption"].ToString();
                 video[c].VcMemory = "Memory: " + Convert.ToDouble(queryObj["AdapterRAM"]) / 1024 / 1024 + " MB";
                 video[c].VcCpu = "Processor: " + queryObj["VideoProcessor"];
-                VideoControllers.Add(video[c]);
                 HardwareList.Add(video[c]);
                 //hardware.VideoControllers.Add(video[c].VcName);
                 c++;
@@ -169,9 +104,7 @@ namespace HardRS.CircularProgressBar
                 processor[c1].Name = queryObj["Name"].ToString();
                 processor[c1].CpuCores = "Number Of Cores: " + queryObj["NumberOfCores"];
                 processor[c1].CpuId = "Processor Id: " + queryObj["ProcessorId"];
-                // Processors.Add(processor[c1]);
                 HardwareList.Add(processor[c1]);
-                //hardware.Processors.Add(processor[c1].Title);
                 c1++;
             }
 
@@ -183,9 +116,7 @@ namespace HardRS.CircularProgressBar
                 memory[c2].Name = "Memory bar #" + (c2 + 1);
                 memory[c2].MCapacity = "Capacity: " + Math.Round(System.Convert.ToDouble(queryObj["Capacity"]) / 1024 / 1024 / 1024, 2) + " GB ";
                 memory[c2].MSpeed = "Speed: " + queryObj["Speed"];
-                Memoryes.Add(memory[c2]);
                 HardwareList.Add(memory[c2]);
-                // hardware.Memories.Add(memory[c2].Title);
                 c2++;
             }
 
@@ -197,33 +128,14 @@ namespace HardRS.CircularProgressBar
                 diskDrive[c3].Name = queryObj["Model"].ToString();
                 diskDrive[c3].DiskSize = "Size:" + Math.Round(Convert.ToDouble(queryObj["Size"]) / 1024 / 1024 / 1024, 2) + " Gb";
                 diskDrive[c3].DiskSerialNumber = "SerialNumber:" + queryObj["SerialNumber"];
-                DiskDrives.Add(diskDrive[c3]);
                 HardwareList.Add(diskDrive[c3]);
-                // hardware.DiskDrives.Add(diskDrive[c3].Title);
-
-
                 c3++;
             }
 
             Console.WriteLine(HardwareList[0].Type);
 
-
-            //Hardwares = new ObservableCollection<Hardware>
-            //{
-            //    new Hardware
-            //    {
-            //    Processor = processor,
-            //    VideoController = video,
-            //    Memory = memory,
-            //    DiskDrive = diskDrive
-            //    }
-            //};
-
-
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
-
-
 
             DispatcherTimer timer = new DispatcherTimer();
             timer.Tick += new EventHandler(Timer_Tick);
@@ -241,7 +153,6 @@ namespace HardRS.CircularProgressBar
                 InstanceName = "_Total"
             };
 
-            //PerformanceCounter avMemory = new PerformanceCounter("Memory", "Total Physical Memory");
             PerformanceCounter memCounter;
             memCounter = new PerformanceCounter
             {
@@ -283,10 +194,19 @@ namespace HardRS.CircularProgressBar
 
             _bgWorker.DoWork += (s, e) =>
             {
-                ProgressCPU = (int)cpuCounter.NextValue();
-                ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
-                ProgressHDD = (int)hddCounter.NextValue();
-                TempCPU = "";
+                Progress.ProgressCPU = (int)cpuCounter.NextValue();
+                Progress.ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
+                Progress.ProgressHDD = (int)hddCounter.NextValue();
+
+                popl2 = Progress.ProgressCPU;
+                var series = new LineSeries();
+                series.Color = OxyColors.Green;
+                Points.Add(new DataPoint(popl, popl2));
+                series.ItemsSource = Points;
+                //Lines.Points.Add(new DataPoint(popl, popl2));
+                PlotModel.Series.Add(series);
+                PlotModel.InvalidatePlot(true);
+                string heh2 = "";
                 //foreach (ManagementObject obj in searcher.Get())
                 //{
                 //    byte[] vendorSpec = obj["VendorSpecific"] as byte[];
@@ -300,35 +220,60 @@ namespace HardRS.CircularProgressBar
                 computer.Open();
                 computer.Accept(updateVisitor);
 
-                for (int i = 0; i < computer.Hardware.Length; i++)
+                for (int i = 0; i < computer.Hardware.Length; i++) 
                 {
-                    if (computer.Hardware[i].HardwareType == HardwareType.CPU)
+                    if (computer.Hardware[i].HardwareType == HardwareType.CPU)//temp of cpu
                     {
                         for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
                         {
                             if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                         }
                     }
                     if (computer.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer.Hardware[i].HardwareType == HardwareType.GpuAti)
-                    {
+                    { //temp of videocard
                         for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
                         {
                             if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                         }
                     }
-                    if (computer.Hardware[i].HardwareType == HardwareType.HDD)
+                    if (computer.Hardware[i].HardwareType == HardwareType.HDD)//temp of hdd
                     {
                         for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
                         {
                             if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                                TempCPU += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            {
+                                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                //popl2 = (double)computer.Hardware[i].Sensors[j].Value;
+                                //Lines.Points.Add(new DataPoint(popl, popl2));
+                                //PlotModel.Series.Add(Lines);
+                                //PlotModel.InvalidatePlot(true);
+                                //DataPoint1 = new DataPoint(popl, popl2);
+                                //Points.Add(new DataPoint(popl, popl2));
+                                popl+=10;
+                            }
                         }
                     }
                 }
+                Temp = heh2;
                 computer.Close();
             };
+        }
+
+        private void SetUpModel()
+        {
+            PlotModel.LegendTitle = "Legend";
+            PlotModel.LegendOrientation = LegendOrientation.Horizontal;
+            PlotModel.LegendPlacement = LegendPlacement.Outside;
+            PlotModel.LegendPosition = LegendPosition.TopRight;
+            PlotModel.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
+            PlotModel.LegendBorder = OxyColors.Black;
+
+            //var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "dd/MM/yy HH:mm") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 80 };
+            //PlotModel.Axes.Add(dateAxis);
+            //var valueAxis = new LinearAxis(AxisPosition.Left, 0) { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "Value" };
+            //PlotModel.Axes.Add(valueAxis);
         }
 
 
@@ -397,6 +342,10 @@ namespace HardRS.CircularProgressBar
         #region INotifyPropertyChanged Member
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
 
         #endregion
     }

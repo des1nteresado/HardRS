@@ -79,3 +79,9 @@ D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csproj.CoreCompi
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.exe
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.pdb
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS.csprojResolveAssemblyReference.cache
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.dll
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.Wpf.dll
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.pdb
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.xml
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.Wpf.pdb
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.Wpf.xml
