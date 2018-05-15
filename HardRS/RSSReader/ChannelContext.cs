@@ -13,8 +13,8 @@ namespace HardRS.RSSReader
             : base("DbConnection")
         { }
 
-        public DbSet<Items> Items { get; set; }
+        public DbSet<Item> Items { get; set; }
         public DbSet<Channel> Channels { get; set; }
-        public DbSet<ImageOfChannel> ChannelImages { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }

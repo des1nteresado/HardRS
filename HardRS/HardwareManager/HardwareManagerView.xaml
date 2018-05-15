@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HardRS.HardwareManager"
              xmlns:cpb="clr-namespace:HardRS.CircularProgressBar"
-             xmlns:oxy="http://oxyplot.org/wpf"
+             xmlns:oxy="http://oxyplot.codeplex.com"
+             
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
     <Grid Background="Azure">
@@ -151,14 +152,20 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+        <Grid Grid.Column="0" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Label FontSize="18" Grid.Row="0" Content="{Binding Temp}" />
         </Grid>
-        
-        <oxy:PlotView Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}"/>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label FontSize="18" Grid.Row="0" Content="max temp of.." />
+        </Grid>
+
+        <oxy:Plot x:Name="Plot1" Title="A Graph" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}" Margin="10" />
 
     </Grid>
 </UserControl>

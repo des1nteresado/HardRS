@@ -23,15 +23,28 @@ namespace HardRS.RSSReader
     /// </summary>
     public partial class RSSReaderView : UserControl
     {
+        Image imageChannel = new Image(); // объект класса рисунка
+        Item[] articles; // массив элементов item канала
+        Channel channel = new Channel(); // объект класса Channel
+        ChannelContext db;
+        int ChannelId;
         public RSSReaderView()
         {
             InitializeComponent();
+            db = new ChannelContext();
+
+            //https://news.tut.by/rss/42/videogames.rss
+            if (getNewArticles("https://news.tut.by/rss/42/devices_tehno.rss") == true && generateHtml() == true)
+            {
+                Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+            }
+
         }
+     
 
-        ImageOfChannel imageChannel = new ImageOfChannel(); // объект класса рисунка
-        Items[] articles; // массив элементов item канала
-        Channel channel = new Channel(); // объект класса Channel
-
+        //Метод принимает в качестве параметра ссылку на RSS-поток,
+        //и возвращает либо true при успешном выполнении,
+        //либо false при неудачной попытке.       
         bool getNewArticles(string fileSource)
         {
             //Весь код помещен в try...catch
@@ -39,12 +52,30 @@ namespace HardRS.RSSReader
             // и вывода их в виде сообщения.
             try
             {
+                //Для предотвращения ошибки 407 (Удаленный сервер возвратил ошибку: 
+                //(407) Требуется проверка подлинности посредника)
+                //в сетях с прокси сервером 
+                //загрузка RSS ленты осуществляется через класс WebRequest
+                //с указанием настроек прокси.
+                WebRequest wr = WebRequest.Create(fileSource);
+
+                //Указываем системные учетные данные приложения,
+                //передаваемые прокси-серверу для выполнения проверки подлинности.
+                wr.Proxy.Credentials = CredentialCache.DefaultCredentials;
+
+
+                //Инициализируем класс XmlTextReader, который
+                //обеспечивает прямой доступ (только для чтения) к потокам данных XML.
+                //и передаем ему экземпляр класса System.IO.Stream(GetResponseStream)
+                //для чтения данных из интернет-ресурса.
+                XmlTextReader xtr = new XmlTextReader(wr.GetResponse().GetResponseStream());
+
                 //Инициализируем класс "XmlDocument". Который представляет XML-документ
                 //и включает в себя метод "Load",
                 //предназначенный для загрузки документа 
                 //с помощью объекта "XMLReader". 
                 XmlDocument doc = new XmlDocument();
-                doc.Load(fileSource);
+                doc.Load(xtr);
 
 
                 //XmlNode root - содержит корневой элемент XML для 
@@ -53,7 +84,7 @@ namespace HardRS.RSSReader
                 //Получаем количество элементов item в RSS-потоке,
                 //используя SelectNodes() и
                 //выражение XPath, которое позволяет это сделать.
-                articles = new Items[root.SelectNodes("channel/item").Count];
+                articles = new Item[root.SelectNodes("channel/item").Count];
                 // Инициализируем класс System.Xml.XmlNodeList, 
                 //содержащий все дочерние узлы данного потока (channel).
                 XmlNodeList nodeList;
@@ -88,6 +119,7 @@ namespace HardRS.RSSReader
                         {
                             channel.Link = chanel_item.InnerText;
                         }
+
                         //Получение изображения канала RSS-потока.
                         if (chanel_item.Name == "image")
                         {
@@ -108,43 +140,108 @@ namespace HardRS.RSSReader
                                 }
                             }
                         }
-
+                        //Обработка сообщения канала RSS-потока.
                         if (chanel_item.Name == "item")
                         {
                             XmlNodeList itemsList = chanel_item.ChildNodes;
-                            articles[count] = new Items();
+                            articles[count] = new Item();
 
                             foreach (XmlNode item in itemsList)
                             {
+                                //Заголовок сообщения.
                                 if (item.Name == "title")
                                 {
                                     articles[count].Title = item.InnerText;
                                 }
+                                //Ссылка на сообщение в интернете.
                                 if (item.Name == "link")
                                 {
                                     articles[count].Link = item.InnerText;
                                 }
+                                //Описание сообщения, по сути оно и является
+                                //самим сообщением в формате HTML.
                                 if (item.Name == "description")
                                 {
                                     articles[count].Description = item.InnerText;
                                 }
+                                // Дата публикации сообщения.
                                 if (item.Name == "pubDate")
                                 {
                                     articles[count].PubDate = item.InnerText;
                                 }
+                                articles[count].ChannelId = channel.Id;
                             }
+
+                            //Увеличение счетчика сообщений
+                            //для массива articles.
                             count += 1;
                         }
-
-
                     }
                 }
+                //После выполнения этого метода, 
+                //объекты классов, будут заполнены данными. 
+                //В imageChanel содержатся все данные о рисунке (если он есть),
+                //В channel - все параметры канала,
+                //Массив articles - будет содержать все сообщения.  
+                //И метод возвратит значение true.
+                if (!hasEqualsChannel(channel))//проверяем на аналогичный канал
+                {
+                    db.Channels.Add(channel);
+                    db.Images.Add(imageChannel);
+                    Console.WriteLine("count articles" + articles.Count());
+                    foreach (Item item in articles)
+                    {
+                        db.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    foreach (Item item in articles)
+                    {
+                        if (!hasEqualsItem(item))//проверяем на аналогичный item, если есть новый - запихиваем в конец
+                        {
+                            item.ChannelId = ChannelId;
+                            db.Items.Add(item);
+                        }
+                    }
+                }
+
+                db.SaveChanges();
                 return true;
             }
             catch (Exception ex)
             {
+                //Сообщение об ошибке при получении или сиснтаксическом анализе данных.
+                MessageBox.Show("Ошибка получения данных :" + ex.Message);
+
+                //И метод возвратит значение false.
                 return false;
             }
+        }
+        //Вывод полученных данных будет происходить
+        //в элементе управления WebBrowser. Все данные из RSS-потока
+        //будут сохранены в виде *.html файла, и последующей его загрузки. 
+        bool hasEqualsChannel(Channel channel)
+        {
+            foreach (Channel ch in db.Channels.ToList())
+            {
+                if (channel.Title.Equals(ch.Title))
+                {
+                    ChannelId = ch.Id;
+                    return true;
+
+                }
+            }
+            return false;
+        }
+        bool hasEqualsItem(Item item)
+        {
+            foreach (Item it in db.Items.ToList())
+            {
+                if (item.Title.Equals(it.Title))
+                    return true;
+            }
+            return false;
         }
         bool generateHtml()
         {
@@ -152,50 +249,85 @@ namespace HardRS.RSSReader
             {
                 using (StreamWriter writer = new StreamWriter("last_articles.html", false, Encoding.Default))
                 {
-                    writer.WriteLine("<html>");
-                    writer.WriteLine("<head>");
-                    writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
-                    writer.WriteLine("<title>");
-                    writer.WriteLine(channel.Title);
-                    writer.WriteLine("</title>");
-                    writer.WriteLine("<style type=\"text/css\">");
-                    writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Verdana;}");
-                    writer.WriteLine("pre{font-family:courier;color:#000000;");
-                    writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
-                    writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
-                    writer.WriteLine("border-bottom:1pt solid #87A5C3;border-left:1pt solid #87A5C3;");
-                    writer.WriteLine("border-right : 1pt solid #87A5C3;	text-align : left;}");
-                    writer.WriteLine("</style>");
-                    writer.WriteLine("</head>");
-                    writer.WriteLine("<body>");
-
-                    writer.WriteLine("<font size=\"2\" face=\"Verdana\">");
-                    writer.WriteLine("<a href=\"" + imageChannel.ImgLink + "\">");
-                    writer.WriteLine("<img src=\"" + imageChannel.ImgURL + "\" border=0></a>  ");
-                    writer.WriteLine("<h3>" + channel.Title + "</h3></a>");
-
-                    writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");
-                    foreach (Items article in articles)
+                    List<Channel> channels = new List<Channel>(db.Channels.ToList());
+                    List<Image> images = new List<Image>(db.Images.ToList());
+                    List<Item> items = new List<Item>(db.Items.ToList());
+                    for (int i = 0; i < channels.Count; i++)
                     {
-                        writer.WriteLine("<tr>");
-                        writer.WriteLine("<td>");
-                        writer.WriteLine("<br>  <a href=\"" + article.Link + "\"><b>" + article.Title + "</b></a>");
-                        writer.WriteLine("& (" + article.PubDate + ")<br><br>");
-                        writer.WriteLine("<table width=\"95 % \" align=\"center\" border=0>");
-                        writer.WriteLine("<tr><td>");
-                        writer.WriteLine(article.Description);
-                        writer.WriteLine("</td></tr></table>");
-                        writer.WriteLine("<br>  <a href=\"" + article.Link + "\">");
-                        writer.WriteLine("<font size=\"1\">читать дальше</font></a><br><br>");
-                        writer.WriteLine("</td>");
-                        writer.WriteLine("</tr>");
+                        //Начало формирования HTML страницы.
+                        writer.WriteLine("<html>");
+                        writer.WriteLine("<head>");
+                        writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
+                        writer.WriteLine("<title>");
+                        //Создание элемента
+                        writer.WriteLine(channels[i].Title);
+                        writer.WriteLine("</title>");
+                        //Стили применяемые к странице.
+                        writer.WriteLine("<style type=\"text/css\">");
+                        writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Verdana;}");
+                        writer.WriteLine("pre{font-family:courier;color:#000000;");
+                        writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
+                        writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
+                        writer.WriteLine("border-bottom:1pt solid #87A5C3;border-left:1pt solid #87A5C3;");
+                        writer.WriteLine("border-right : 1pt solid #87A5C3;	text-align : left;}");
+                        writer.WriteLine("</style>");
+                        writer.WriteLine("</head>");
+                        writer.WriteLine("<body>");
+                        //Вставка изображения из сообщения.
+                        writer.WriteLine("<font size=\"2\" face=\"Verdana\">");
+                        writer.WriteLine("<a href=\"" + images[i].ImgLink + "\">");
+                        writer.WriteLine("<img src=\"" + images[i].ImgURL + "\" border=0></a>  ");
+                        //Вывод заголовка(гиперссылки) RSS-потока - источника.
+                        writer.WriteLine("<h3>" + channels[i].Title + "</h3></a>");
+                        //Переменная для подсчета количества и нумерации сообщений.
+                        int countofel = 1;
+                        writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");//border
+                        foreach (Item article in items)
+                        {
+                            if (article.ChannelId == channels[i].Id)
+                            {
+                                writer.WriteLine("<tr>");
+                                writer.WriteLine("<td>");
+                                writer.WriteLine("<br>  <a href=\"" + article.Link + "\"><b>" + countofel + ". " + article.Title + "</b></a>");
+                                writer.WriteLine("& (" + article.PubDate + ")<br><br>");
+                                writer.WriteLine("<table width=\"95 % \" align=\"center\" border=0>");
+                                writer.WriteLine("<tr><td>");
+                                writer.WriteLine(article.Description);
+                                writer.WriteLine("</td></tr></table>");
+                                writer.WriteLine("<br>  <a href=\"" + article.Link + "\">");
+                                writer.WriteLine("<font size=\"1\">Читать далее > > ></font></a><br><br>");
+                                writer.WriteLine("</td>");
+                                writer.WriteLine("</tr>");
+                                countofel++;
+                            }
+                        }
+                        writer.WriteLine("</table><br>");
+                        writer.WriteLine("<p align=\"center\">");
+                        writer.WriteLine("<a href=\"" + channels[i].Link + "\">" + channels[i].Copyright + "</a></p>");
+                        writer.WriteLine("</font>");
+                        writer.WriteLine("</body>");
+                        writer.WriteLine("</html>");
                     }
-                    writer.WriteLine("</table><br>");
-                    writer.WriteLine("<p align=\"center\">");
-                    writer.WriteLine("<a href=\"" + channel.Link + "\">" + channel.Copyright + "</a></p>");
-                    writer.WriteLine("</font>");
-                    writer.WriteLine("</body>");
-                    writer.WriteLine("</html>");
+
+
+                    //Переменная для подсчета количества и нумерации сообщений.
+                    int count_element = 0;
+                    //Очистка listBox1 перед каждой загрузкой
+                    //заголовков сообщений.
+                    listBox1.Items.Clear();
+                    //Вставка сообщений в таблицу. 
+                    foreach (Item article in items)
+                    {
+                        //Вставка в listBox1 заголовков сообщений.                 
+                        listBox1.Items.Add((count_element + 1) + ". " + article.Title + " (" + article.PubDate + ")");
+                        //После вставки сообщения                 
+                        //увеличиваем счетчик сообщений на 1.                 
+                        count_element++;
+                    }
+                    //Вывод общего количества сообщений в label2.
+                    label1.Content = "Всего сообщений: " + count_element.ToString();
+
+                    //Если все выполнено успешно, метод возвратит true.
                     return true;
                 }
             }
@@ -208,7 +340,7 @@ namespace HardRS.RSSReader
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (getNewArticles("https://news.tut.by/rss/all.rss") == true && generateHtml() == true)
+            if (getNewArticles("https://news.tut.by/rss/42/videogames.rss") == true && generateHtml() == true)
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
             }
