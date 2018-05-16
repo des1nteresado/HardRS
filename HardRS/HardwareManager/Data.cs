@@ -3,16 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static HardRS.HardwareManager.HManagerViewModel;
 
 namespace HardRS.HardwareManager
 {
+    public static class MaxTemp
+    {
+        public static string MTemp { get; set; }
+        public static int[] MTemps { get; set; }
+
+        static MaxTemp()
+        {
+            MTemp = "";
+            MTemps = new int[10];
+            for (int i = 0; i < 10; i++)
+            {
+                MTemps[i] = 0;
+            }
+        }
+    }
+
     public class Data
     {
         public static List<Measurement> GetUpdateData(DateTime dateTime)
         {
             var measurements = new List<Measurement>();
-            var r = new Random();
+            string t = "";
             int counter = 0;
+            MaxTemp.MTemp = "";
             UpdateVisitor updateVisitor = new UpdateVisitor();
             Computer computer = new Computer()
             {
@@ -30,17 +48,32 @@ namespace HardRS.HardwareManager
                 {
                     for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
                     {
+                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                        {
+                            t += computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            if (MaxTemp.MTemps[counter] < computer.Hardware[i].Sensors[j].Value)
+                            {
+                                MaxTemp.MTemps[counter] = (int)computer.Hardware[i].Sensors[j].Value;
+                                MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            }
+                            else
+                            {
+                                MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + MaxTemp.MTemps[counter] + "\n";
+                            }
+                        }
                         if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature && computer.Hardware[i].Sensors[j].Name.Contains("CPU Package"))
                         {
                             measurements.Add(new Measurement()
                             {
                                 DetectorId = counter,
                                 DateTime = dateTime.AddSeconds(1),
-                                Value = (int)computer.Hardware[i].Sensors[j].Value
+                                Value = (int)computer.Hardware[i].Sensors[j].Value,
+                                Name = computer.Hardware[i].Sensors[j].Name
                             });
                             counter++;
                             //heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                         }
+                     
                     }
                 }
                 if (computer.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer.Hardware[i].HardwareType == HardwareType.GpuAti)
@@ -51,49 +84,57 @@ namespace HardRS.HardwareManager
                         {
                             if((int)computer.Hardware[i].Sensors[j].Value != 0)
                             {
+                                if (MaxTemp.MTemps[counter] < computer.Hardware[i].Sensors[j].Value)
+                                {
+                                    MaxTemp.MTemps[counter] = (int)computer.Hardware[i].Sensors[j].Value;
+                                    MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                }
+                                else
+                                {
+                                    MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + MaxTemp.MTemps[counter] + "\n";
+                                }
                                 measurements.Add(new Measurement()
                                 {
                                     DetectorId = counter,
                                     DateTime = dateTime.AddSeconds(1),
-                                    Value = (int)computer.Hardware[i].Sensors[j].Value
+                                    Value = (int)computer.Hardware[i].Sensors[j].Value,
+                                    Name = computer.Hardware[i].Sensors[j].Name
                                 });
                                 counter++;
+                                t += computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                             }
-                            //heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                         }
                     }
                 }
-                if (computer.Hardware[i].HardwareType == HardwareType.HDD)//temp of hdd
+                if (computer.Hardware[i].HardwareType == HardwareType.HDD)//temp of disk
                 {
                     for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
                     {
                         if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
                         {
+                            if (MaxTemp.MTemps[counter] < computer.Hardware[i].Sensors[j].Value)
+                            {
+                                MaxTemp.MTemps[counter] = (int)computer.Hardware[i].Sensors[j].Value;
+                                MaxTemp.MTemp += "Max " + "Storage" +": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            }
+                            else
+                            {
+                                MaxTemp.MTemp += "Max " + "Storage" + ": " + MaxTemp.MTemps[counter] + "\n";
+                            }
                             measurements.Add(new Measurement()
                             {
                                 DetectorId = counter,
                                 DateTime = dateTime.AddSeconds(1),
-                                Value = (int)computer.Hardware[i].Sensors[j].Value
+                                Value = (int)computer.Hardware[i].Sensors[j].Value,
+                                Name = computer.Hardware[i].Sensors[j].Name
                             });
                             counter++;
-                            //heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
-                            //popl2 = (double)computer.Hardware[i].Sensors[j].Value;
-                            //Lines.Points.Add(new DataPoint(popl, popl2));
-                            //PlotModel.Series.Add(Lines);
-                            //PlotModel.InvalidatePlot(true);
-                            //DataPoint1 = new DataPoint(popl, popl2);
-                            //Points.Add(new DataPoint(popl, popl2));
+                            t += "Storage" + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                         }
                     }
                 }
             }
-
-            //for (int i = 0; i < 5; i++)
-            //{
-
-            //    measurements.Add(new Measurement() { DetectorId = i, DateTime = dateTime.AddSeconds(1), Value = r.Next(1, 30) });
-            //}
-
+            measurements[0].Temp = t;
             computer.Close();
             return measurements;
         }
@@ -102,22 +143,10 @@ namespace HardRS.HardwareManager
     public class Measurement
     {
         public int DetectorId { get; set; }
+        public string Name { get; set; }
         public int Value { get; set; }
         public DateTime DateTime { get; set; }
-    }
+        public string Temp { get; set; }
 
-    public class UpdateVisitor : IVisitor
-    {
-        public void VisitComputer(IComputer computer)
-        {
-            computer.Traverse(this);
-        }
-        public void VisitHardware(IHardware hardware)
-        {
-            hardware.Update();
-            foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
-        }
-        public void VisitSensor(ISensor sensor) { }
-        public void VisitParameter(IParameter parameter) { }
     }
 }

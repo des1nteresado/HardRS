@@ -9,10 +9,24 @@
              
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
-    <Grid Background="Azure">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+        <Style TargetType="TreeView">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="FontFamily" Value="Times New Roman" />
+        </Style>
+        <Style TargetType="TreeViewItem">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="125" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -22,20 +36,42 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
-        <cpb:CircularProgressBar Grid.Column="2" Grid.Row="2" StrokeThickness="5" Radius="70"
+        <Grid Grid.Column="2" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" FontSize="18" Content="CPU Usage" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center"/>
+            <cpb:CircularProgressBar Grid.Row="1" StrokeThickness="5" Radius="70"
+                                 Background="DarkBlue"
                                  Value="{Binding Progress.ProgressCPU}" 
                                  Text="{Binding Progress.ProgressCPUText, Mode=OneWay}"
-                                 Style="{StaticResource CircularProgressBarStyle}" />
-        <cpb:CircularProgressBar Grid.Column="3" Grid.Row="2" StrokeThickness="5" Radius="70"
+                                 Style="{StaticResource CircularProgressBarStyle}"/>
+        </Grid>
+        <Grid Grid.Column="3" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" FontSize="18" Content="Memory Usage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <cpb:CircularProgressBar Grid.Row="1" StrokeThickness="5" Radius="70"
+                                     Background="DarkGreen"
                                  Value="{Binding Progress.ProgressMEM}" 
                                  Text="{Binding Progress.ProgressMEMText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-        <cpb:CircularProgressBar Grid.Column="4" Grid.Row="2" StrokeThickness="5" Radius="70"
+        </Grid>
+        <Grid Grid.Column="4" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" FontSize="18" Content="Storage Usage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <cpb:CircularProgressBar Grid.Row="1" StrokeThickness="5" Radius="70"
+                                 Background="DarkRed"
                                  Value="{Binding Progress.ProgressHDD}" 
                                  Text="{Binding Progress.ProgressHDDText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />
-
+        </Grid>
         <TreeView Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" Grid.RowSpan="2" ItemsSource="{Binding Hardwares.Groups}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
@@ -152,20 +188,21 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Grid Grid.Column="0" Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Label FontSize="18" Grid.Row="0" Content="{Binding Temp}" />
-        </Grid>
-        <Grid Grid.Column="1" Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Label FontSize="18" Grid.Row="0" Content="max temp of.." />
-        </Grid>
 
-        <oxy:Plot x:Name="Plot1" Title="A Graph" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}" Margin="10" />
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="120"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <oxy:Plot x:Name="Plot1" Grid.Row="0" Grid.Column="0" Background="LightGray" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}" />
+            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Content="{Binding MTemp}" />
+            <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="{Binding Temp}" />
+        </Grid>
 
     </Grid>
 </UserControl>

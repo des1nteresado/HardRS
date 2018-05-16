@@ -11,15 +11,18 @@
     <Style x:Key="CircularProgressBarStyle" TargetType="my:CircularProgressBar">
         <Setter Property="Value" Value="50"/>
         <Setter Property="StrokeThickness" Value="10"/>
+        <!--цвет линии загрузки-->
         <Setter Property="Radius" Value="40"/>
-        <Setter Property="Background" Value="RosyBrown"/> <!--цвет линии загрузки-->
+        <Setter Property="Background" Value="Gray"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="my:CircularProgressBar">
                     <Grid
                                 Width="{Binding Path=Radius, Converter={StaticResource radtodia},RelativeSource={RelativeSource AncestorType=ProgressBar}}"
                                 Height="{Binding Path=Radius, Converter={StaticResource radtodia}, RelativeSource={RelativeSource AncestorType=ProgressBar}}">
-                        <Path Stroke="Firebrick"  StrokeThickness="1" Fill="MistyRose" Opacity="0.7"> <!--Внутренний круг fill-заливка, stroke-контур-->
+                        <!-- stroke-контур-->
+                        <Path Stroke="Gray" StrokeThickness="1" Fill="LightGray" Opacity="0.7">
+                            <!--Внутренний круг fill-заливка -->
                             <Path.Data>
                                 <EllipseGeometry 
                                         Center="{Binding Path=Radius,Converter={StaticResource rtocConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=ProgressBar}}"
@@ -71,10 +74,10 @@
                                 </PathGeometry>
                             </Path.Data>
                         </Path>
-
+                        <!--размер текста и тд.-->
                         <TextBlock Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center"
                                            Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}}"
-                                               FontSize="18" FontFamily="Franklin Gothic Medium"/> <!--размер текста и тд.-->
+                                               FontSize="18" FontFamily="Franklin Gothic Medium"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -24,14 +24,6 @@ namespace HardRS.HardwareManager
     {
         private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
 
-        //public List<DataPoint> Points { get; set; }
-        //public List<DataPoint> Points2 { get; set; }
-        //public List<LineSeries> ListLine { get; set; }
-
-        //double popl = 0;
-        //double popl2;
-        //double popl22;
-
         ManagementObjectSearcher videoSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
         ManagementObjectSearcher processorSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
         ManagementObjectSearcher memorySrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
@@ -39,18 +31,8 @@ namespace HardRS.HardwareManager
 
         public List<Hardware> HardwareList;
         public Progress Progress { get; set; }
-        //public LineSeries Lines { get; set; }
-
-        //private PlotModel plotModel;
-
-        //public PlotModel PlotModel
-        //{
-        //    get { return plotModel; }
-        //    set { plotModel = value; OnPropertyChanged("PlotModel"); }
-        //}
 
         private string temp;
-
         public string Temp
         {
             get
@@ -62,6 +44,21 @@ namespace HardRS.HardwareManager
                 temp = value;
 
                 OnPropertyChanged("Temp");
+            }
+        }
+
+        private string mTemp;
+        public string MTemp
+        {
+            get
+            {
+                return mTemp;
+            }
+            set
+            {
+                mTemp = value;
+
+                OnPropertyChanged("MTemp");
             }
         }
 
@@ -101,51 +98,54 @@ namespace HardRS.HardwareManager
             PlotModel.LegendPosition = LegendPosition.TopRight;
             PlotModel.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
             PlotModel.LegendBorder = OxyColors.Black;
-            var endDate = DateTime.Now.AddMinutes(-3);
-            double minDate = DateTimeAxis.ToDouble(endDate);
+            var endDate = DateTime.Now;
+            double minDate = DateTimeAxis.ToDouble(DateTime.Now);
             //Вертикальная вид линии решетки      //Горизонтальная
-            var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 60 };
+            var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm:ss") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Minimum=minDate, IntervalLength = 60 };
             PlotModel.Axes.Add(dateAxis);
             var valueAxis = new LinearAxis(AxisPosition.Left, 30) { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Maximum=100, Title = "Value" };
             PlotModel.Axes.Add(valueAxis);
-
         }
 
         private void LoadData()
         {
-            //List<Measurement> measurements = Data.GetData();
             List<Measurement> measurements = Data.GetUpdateData(lastUpdate);
-            var dataPerDetector = measurements.GroupBy(m => m.DetectorId).OrderBy(m => m.Key).ToList();
-            foreach (var data in dataPerDetector)
+            foreach (var m in measurements)
             {
                 var lineSerie = new LineSeries
                 {
                     StrokeThickness = 2,
                     MarkerSize = 3,
-                    MarkerStroke = colors[data.Key],
-                    MarkerType = markerTypes[data.Key],
+                    MarkerStroke = colors[m.DetectorId],
+                    MarkerType = markerTypes[m.DetectorId],
                     CanTrackerInterpolatePoints = false,
-                    Title = string.Format("Detector {0}", data.Key),
+                    Title = string.Format("{0}", m.Name),
                     Smooth = false,
                 };
 
-                data.ToList().ForEach(d => lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(d.DateTime), d.Value)));
+                lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(m.DateTime), m.Value));
                 PlotModel.Series.Add(lineSerie);
             }
-            Console.WriteLine("///////////////1////////////");
-            Console.WriteLine(PlotModel.Series.Count);
             lastUpdate = DateTime.Now;
         }
 
         public void UpdateModel()
         {
             List<Measurement> measurements = Data.GetUpdateData(lastUpdate);
-            var dataPerDetector = measurements.GroupBy(m => m.DetectorId).OrderBy(m => m.Key).ToList();
-
-            foreach (var data in dataPerDetector)
+            if(PlotModel.Series.Count >= 4)
             {
-                Console.WriteLine("/////////////2/////////////");
-                Console.WriteLine(PlotModel.Series.Count);
+                PlotModel.Axes.Clear();
+                double minDate = DateTimeAxis.ToDouble(DateTime.Now);
+                //Вертикальная вид линии решетки      //Горизонтальная
+                var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm:ss") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Minimum = minDate, IntervalLength = 60 };
+                PlotModel.Axes.Add(dateAxis);
+                var valueAxis = new LinearAxis(AxisPosition.Left, 30) { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Maximum = 100, Title = "Value" };
+                PlotModel.Axes.Add(valueAxis);
+            }
+            Temp = measurements[0].Temp;
+            MTemp = MaxTemp.MTemp;
+            foreach (var m in measurements)
+            {
                 if(PlotModel.Series.Count == 0)
                 {
                     PlotModel = new PlotModel();
@@ -154,22 +154,21 @@ namespace HardRS.HardwareManager
                 }
                 else
                 {
-                    if(PlotModel.Series.Count == data.Key)
+                    if(PlotModel.Series.Count == m.DetectorId)
                     {
-                        var lineSerie = PlotModel.Series[data.Key-1] as LineSeries;
+                        var lineSerie = PlotModel.Series[m.DetectorId-1] as LineSeries;
                         if (lineSerie != null)
                         {
-                            data.ToList()
-                                .ForEach(d => lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(d.DateTime), d.Value)));
+                            lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(m.DateTime), m.Value));
+                            PlotModel.InvalidatePlot(true);
                         }
                     }
                     else
                     {
-                        var lineSerie = PlotModel.Series[data.Key] as LineSeries;
+                        var lineSerie = PlotModel.Series[m.DetectorId] as LineSeries;
                         if (lineSerie != null)
                         {
-                            data.ToList()
-                                .ForEach(d => lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(d.DateTime), d.Value)));
+                            lineSerie.Points.Add(new DataPoint(DateTimeAxis.ToDouble(m.DateTime), m.Value));
                         }
                     }
                     
@@ -178,38 +177,27 @@ namespace HardRS.HardwareManager
             lastUpdate = DateTime.Now;
         }
 
-
         public HManagerViewModel()
         {
-       
-
-
             Processor[] processor = new Processor[processorSrch.Get().Count];
             VideoController[] video = new VideoController[videoSrch.Get().Count];
             Memory[] memory = new Memory[memorySrch.Get().Count];
             DiskDrive[] diskDrive = new DiskDrive[diskSrch.Get().Count];
             HardwareList = new List<Hardware>();
             Progress = new Progress();
-            //Points = new List<DataPoint>();
-            //Points2 = new List<DataPoint>();
-            //ListLine = new List<LineSeries>();
-
 
             PlotModel = new PlotModel { Title = "Температура датчиков" };
-
 
             int c = 0;
 
             foreach (ManagementObject queryObj in videoSrch.Get())
             {
-                Console.WriteLine(videoSrch.Get().Count);
                 video[c] = new VideoController();
                 video[c].Type = "Video";
                 video[c].Name = queryObj["Caption"].ToString();
                 video[c].VcMemory = "Memory: " + Convert.ToDouble(queryObj["AdapterRAM"]) / 1024 / 1024 + " MB";
                 video[c].VcCpu = "Processor: " + queryObj["VideoProcessor"];
                 HardwareList.Add(video[c]);
-                //hardware.VideoControllers.Add(video[c].VcName);
                 c++;
             }
 
@@ -249,8 +237,6 @@ namespace HardRS.HardwareManager
                 c3++;
             }
 
-            Console.WriteLine(HardwareList[0].Type);
-
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
 
@@ -285,36 +271,30 @@ namespace HardRS.HardwareManager
                 InstanceName = "_Total"
             };
 
-            UpdateVisitor updateVisitor = new UpdateVisitor();
-            Computer computer = new Computer()
+            UpdateVisitor updateVisitor1 = new UpdateVisitor();
+            Computer computer1 = new Computer()
             {
                 CPUEnabled = true,
-                GPUEnabled = true,
+                GPUEnabled = false,
                 HDDEnabled = true
             };
-
-            //ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSStorageDriver_ATAPISmartData WHERE Active=True");
 
             try
             {
                 _bgWorker.RunWorkerAsync();
             }
-#pragma warning disable CS0168 // Переменная "e" объявлена, но ни разу не использована.
-            catch (Exception e)
-#pragma warning restore CS0168 // Переменная "e" объявлена, но ни разу не использована.
+            finally
             {
                 _bgWorker.WorkerSupportsCancellation = true;
                 _bgWorker.CancelAsync();
             }
-
-
 
             _bgWorker.DoWork += (s, e) =>
             {
                 Progress.ProgressCPU = (int)cpuCounter.NextValue();
                 Progress.ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
                 Progress.ProgressHDD = (int)hddCounter.NextValue();
-
+                #region try
                 //popl2 = Progress.ProgressMEM;
                 //popl22 = Progress.ProgressCPU;
 
@@ -322,63 +302,57 @@ namespace HardRS.HardwareManager
 
                 //GetSeries(PlotModel, Points, popl, popl22, OxyColors.Red);
 
+                //CollectorTemp = "";
+                //heh2 = "";
+                //computer1.Open();
+                //computer1.Accept(updateVisitor1);
 
-                //string heh2 = "";
-                //foreach (ManagementObject obj in searcher.Get())
+                //for (int i = 0; i < computer1.Hardware.Length; i++)
                 //{
-                //    byte[] vendorSpec = obj["VendorSpecific"] as byte[];
-                //    if (vendorSpec != null)
+                //    if (computer1.Hardware[i].HardwareType == HardwareType.CPU)//temp of cpu
                 //    {
-                //        Console.WriteLine("Температура SSD = " + vendorSpec[115]);
-                //    }
-
-                //}
-
-                //computer.Open();
-                //computer.Accept(updateVisitor);
-
-                //for (int i = 0; i < computer.Hardware.Length; i++)
-                //{
-                //    if (computer.Hardware[i].HardwareType == HardwareType.CPU)//temp of cpu
-                //    {
-                //        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                //        for (int j = 0; j < computer1.Hardware[i].Sensors.Length; j++)
                 //        {
-                //            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                //                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                //            if (computer1.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                //                heh2 += computer1.Hardware[i].Sensors[j].Name + ":" + computer1.Hardware[i].Sensors[j].Value.ToString() + "\n";
                 //        }
                 //    }
-                //    if (computer.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer.Hardware[i].HardwareType == HardwareType.GpuAti)
-                //    { //temp of videocard
-                //        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
-                //        {
-                //            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                //                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
-                //        }
-                //    }
-                //    if (computer.Hardware[i].HardwareType == HardwareType.HDD)//temp of hdd
+                //    //if (computer1.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer1.Hardware[i].HardwareType == HardwareType.GpuAti)
+                //    //{ //temp of videocard
+                //    //    for (int j = 0; j < computer1.Hardware[i].Sensors.Length; j++)
+                //    //    {
+                //    //        if (computer1.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                //    //        {
+                //    //            if ((int)computer1.Hardware[i].Sensors[j].Value != 0)
+                //    //            {
+                //    //                heh2 += computer1.Hardware[i].Sensors[j].Name + ":" + computer1.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                //    //            }
+                //    //        }
+                //    //    }
+                //    //}
+                //    if (computer1.Hardware[i].HardwareType == HardwareType.HDD)//temp of hdd
                 //    {
-                //        for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                //        for (int j = 0; j < computer1.Hardware[i].Sensors.Length; j++)
                 //        {
-                //            if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                //            if (computer1.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
                 //            {
-                //                heh2 += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
-                //                //popl2 = (double)computer.Hardware[i].Sensors[j].Value;
-                //                //Lines.Points.Add(new DataPoint(popl, popl2));
-                //                //PlotModel.Series.Add(Lines);
-                //                //PlotModel.InvalidatePlot(true);
-                //                //DataPoint1 = new DataPoint(popl, popl2);
-                //                //Points.Add(new DataPoint(popl, popl2));
+                //                heh2 += computer1.Hardware[i].Sensors[j].Name + ":" + computer1.Hardware[i].Sensors[j].Value.ToString() + "\n";
                 //            }
                 //        }
                 //    }
                 //}
+
+                ////GetTempCPU(CollectorTemp, computer, updateVisitor);
+                ////GetTempCPU(CollectorTemp, computer, updateVisitor);
+                ////GetTempCPU(CollectorTemp, computer, updateVisitor);
+
                 //Temp = heh2;
-                //popl += 1;
-                computer.Close();
+                //computer1.Close();
+                #endregion
             };
         }
 
-
+        #region getseries
         //public void GetSeries(PlotModel PlotModel, List<DataPoint> list, double x, double y, double y2, OxyColor color2, OxyColor color)
         //    {
         //        ListLine = new List<LineSeries>();
@@ -400,45 +374,84 @@ namespace HardRS.HardwareManager
         //            PlotModel.InvalidatePlot(true);
         //        }
         //        }
+        #endregion
+        #region methods for temp
+        public void GetTempCPU(string collector, Computer computer, UpdateVisitor updateVisitor)
+        {
+            computer.Open();
+            computer.Accept(updateVisitor);
+            for (int i = 0; i < computer.Hardware.Length; i++)
+            {
+                if (computer.Hardware[i].HardwareType == HardwareType.CPU)//temp of cpu
+                {
+                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                    {
+                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                            collector += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                    }
+                }
+            }
+            computer.Close();
+        }
 
+        public void GetTempVideo(string collector, Computer computer, UpdateVisitor updateVisitor)
+        {
+            computer.Open();
+            computer.Accept(updateVisitor);
+            for (int i = 0; i < computer.Hardware.Length; i++)
+            {
+                if (computer.Hardware[i].HardwareType == HardwareType.GpuNvidia || computer.Hardware[i].HardwareType == HardwareType.GpuAti)
+                { //temp of videocard
+                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                    {
+                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                        {
+                            if ((int)computer.Hardware[i].Sensors[j].Value != 0)
+                            {
+                                collector += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            }
+                        }
+                    }
+                }
+            }
+            computer.Close();
+        }
 
+        public void GetTempHDD(string collector, Computer computer, UpdateVisitor updateVisitor)
+        {
+            computer.Open();
+            computer.Accept(updateVisitor);
+            for (int i = 0; i < computer.Hardware.Length; i++)
+            {
+                if (computer.Hardware[i].HardwareType == HardwareType.HDD)//temp of hdd
+                {
+                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                    {
+                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                        {
+                            collector += computer.Hardware[i].Sensors[j].Name + ":" + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                        }
+                    }
+                }
+            }
+            computer.Close();
+        }
+        #endregion
 
-
-        //----------------------------------------------это моё
-        //public void GetCpuTemp(object sender, EventArgs e)
-        //{
-        //    var computer = new Computer // ИСПОЛЬЗУЕМ КАСТОМНУЮ БИБЛИОТЕКУ OPENHARDWARE
-        //    {
-        //        MainboardEnabled = false,
-        //        CPUEnabled = false,
-        //        RAMEnabled = false,
-        //        GPUEnabled = false,
-        //        FanControllerEnabled = false,
-        //        HDDEnabled = true
-        //    };
-
-        //    computer.Open();
-
-        //    var temps = new List<string>();
-
-        //    foreach (var item in computer.Hardware)
-        //    {
-        //        temps.AddRange(from sensor in item.Sensors where sensor.SensorType == SensorType.Load where sensor.Value != null select sensor.Value.Value.ToString(CultureInfo.CurrentCulture));
-        //        //temps.AddRange(from sensor in item.Sensors where sensor.SensorType == SensorType.Temperature where sensor.Value != null select sensor.Value.Value.ToString(CultureInfo.CurrentCulture));
-        //    }
-
-
-
-            //computer.Close();
-
-            //textBoxHard1.Text = temps[0];
-            //textBoxHard2.Text = temps[1];
-            //textBoxHard3.Text = temps[2];
-            //textBoxHard4.Text = temps[3];
-            //textBoxHard5.Text = temps[4];
-            //textBoxHard6.Text = temps[5];
-
-        //}
+        public class UpdateVisitor : IVisitor
+        {
+            public void VisitComputer(IComputer computer)
+            {
+                computer.Traverse(this);
+            }
+            public void VisitHardware(IHardware hardware)
+            {
+                hardware.Update();
+                foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
+            }
+            public void VisitSensor(ISensor sensor) { }
+            public void VisitParameter(IParameter parameter) { }
+        }
 
         public ICollectionView Hardwares
         {
