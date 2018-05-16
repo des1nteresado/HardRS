@@ -200,8 +200,8 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <oxy:Plot x:Name="Plot1" Grid.Row="0" Grid.Column="0" Background="LightGray" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}" />
-            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Content="{Binding MTemp}" />
-            <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="{Binding Temp}" />
+            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Content="{Binding Temp}" />
+            <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="{Binding MTemp}" />
         </Grid>
 
     </Grid>
