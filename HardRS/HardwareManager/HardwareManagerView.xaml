@@ -6,21 +6,20 @@
              xmlns:local="clr-namespace:HardRS.HardwareManager"
              xmlns:cpb="clr-namespace:HardRS.CircularProgressBar"
              xmlns:oxy="http://oxyplot.codeplex.com"
-             
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
     <UserControl.Resources>
         <Style TargetType="Label">
-            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontFamily" Value="Century Gothic" />
             <Setter Property="FontSize" Value="18" />
         </Style>
         <Style TargetType="TreeView">
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="LightGray" />
-            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontFamily" Value="Century Gothic" />
         </Style>
         <Style TargetType="TreeViewItem">
-            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="FontFamily" Value="Century Gothic" />
         </Style>
     </UserControl.Resources>
     <Grid Background="LightGray">
@@ -75,11 +74,11 @@
         <TreeView Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="2" Grid.RowSpan="2" ItemsSource="{Binding Hardwares.Groups}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                    <TextBlock Text="{Binding Name}" FontSize="18"/>
+                    <TextBlock Text="{Binding Name}" FontSize="20"/>
                     <HierarchicalDataTemplate.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}" FontSize="16">
+                                <TextBlock Text="{Binding Name}" FontSize="18">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -90,7 +89,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding CpuCores}">
+                                <TextBlock Text="{Binding CpuCores}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -101,7 +100,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding CpuId}">
+                                <TextBlock Text="{Binding CpuId}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -112,7 +111,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding VcMemory}">
+                                <TextBlock Text="{Binding VcMemory}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -123,7 +122,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding VcCpu}">
+                                <TextBlock Text="{Binding VcCpu}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -134,7 +133,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding MCapacity}">
+                                <TextBlock Text="{Binding MCapacity}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -145,7 +144,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding MSpeed}">
+                                <TextBlock Text="{Binding MSpeed}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -156,7 +155,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding DiskSize}">
+                                <TextBlock Text="{Binding DiskSize}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -167,7 +166,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding DiskSerialNumber}">
+                                <TextBlock Text="{Binding DiskSerialNumber}" FontSize="14">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -196,12 +195,12 @@
                 <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="155"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <oxy:Plot x:Name="Plot1" Grid.Row="0" Grid.Column="0" Background="LightGray" Grid.ColumnSpan="2" Grid.RowSpan="2" Model="{Binding PlotModel}" />
-            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Content="{Binding Temp}" />
-            <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="{Binding MTemp}" />
+            <Label Grid.Row="2" Grid.Column="0" FontSize="17" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding Temp}" />
+            <Label Grid.Row="2" Grid.Column="1" FontSize="17" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding MTemp}" />
         </Grid>
 
     </Grid>

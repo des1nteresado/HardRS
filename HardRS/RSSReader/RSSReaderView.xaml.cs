@@ -37,9 +37,17 @@ namespace HardRS.RSSReader
 
             db = new ChannelContext();
 
-            if (getNewArticles(link) == true && generateHtml() == true)
+            if (getNewArticles(link))
+            {
+                if (generateHtml())
+                {
+                    Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+                }
+            }
+            else
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+                label1.Content = "Подключение отсутствует, данные не обновлены.";
             }
 
         }
@@ -290,7 +298,9 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</title>");
                         //Стили применяемые к странице.
                         writer.WriteLine("<style type=\"text/css\">");
+                        writer.WriteLine("img{ border: 1px solid #ddd; border-radius: 4px; padding: 5px; width: 150px; height: auto;}");
                         writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Arial;}");
+                        writer.WriteLine("body{ background-color: lightgray;}");
                         writer.WriteLine("pre{font-family:courier;color:#000000;");
                         writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
                         writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
@@ -350,9 +360,17 @@ namespace HardRS.RSSReader
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (getNewArticles(link) == true && generateHtml() == true)
+            if (getNewArticles(link))
+            {
+                if (generateHtml())
+                {
+                    Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+                }
+            }
+            else
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+                label1.Content = "Подключение отсутствует, данные не обновлены.";
             }
         }
 
@@ -369,7 +387,7 @@ namespace HardRS.RSSReader
                 }
             }
             GenerateSearchHtml(findItems);
-            SearchBrowser.Navigate(Environment.CurrentDirectory + "/search_articles.html");
+            Browser.Navigate(Environment.CurrentDirectory + "/search_articles.html");
         }
         private void GenerateSearchHtml(List<Item> items)
         {
@@ -385,6 +403,7 @@ namespace HardRS.RSSReader
                     writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
                     writer.WriteLine("<style type=\"text/css\">");
                     writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Verdana;}");
+                    writer.WriteLine("body{ background-color: grey;}");
                     writer.WriteLine("pre{font-family:courier;color:#000000;");
                     writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
                     writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");

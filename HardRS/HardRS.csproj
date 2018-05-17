@@ -210,6 +210,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="RSSReader\Images\search.png" />
+    <Resource Include="RSSReader\Images\refresh.png" />
+    <Resource Include="HardwareManager\обоя.jpg" />
     <Content Include="RSSReader\RSSDataBase.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

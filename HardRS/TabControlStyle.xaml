@@ -5,7 +5,7 @@
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border x:Name="FocusStyle" Background="#4433b4ed" />
+                    <Border x:Name="FocusStyle" Background="LightGray" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -33,13 +33,13 @@
                                   />
                         <Border x:Name="Border"
                                 Grid.Row="1"
-                                BorderThickness="2"
-                                CornerRadius="2"
+                                BorderThickness="0"
+                                CornerRadius="1"
                                 KeyboardNavigation.TabNavigation="Local"
                                 KeyboardNavigation.DirectionalNavigation="Contained"
                                 KeyboardNavigation.TabIndex="2"
-                                BorderBrush="Blue">
-                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" />
+                                BorderBrush="#FF293955">
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="1" ContentSource="SelectedContent" />
                         </Border>
                     </Grid>
                 </ControlTemplate>
@@ -47,80 +47,10 @@
         </Setter>
     </Style>
     
-    <!--33b4ed-->
-    
-    <Style x:Key="TabItemStyleOrange" TargetType="{x:Type TabItem}">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="#FF474747"/>
-        <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisualStyte}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TabItem}">
-                    <ControlTemplate.Resources>
-                        <Storyboard x:Key="StartAction">
-                            <DoubleAnimation Storyboard.TargetName="border1Highlited" Storyboard.TargetProperty="(UIElement.Opacity)" From="0" To="1" Duration="0:0:0.5"/>
-                            <DoubleAnimation Storyboard.TargetName="border2Highlited" Storyboard.TargetProperty="(UIElement.Opacity)" From="0" To="1" Duration="0:0:0.5"/>
-                        </Storyboard>
-
-                        <Storyboard x:Key="ExitAction">
-                            <DoubleAnimation Storyboard.TargetName="border1Highlited" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3" />
-                            <DoubleAnimation Storyboard.TargetName="border2Highlited" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.3" />
-                        </Storyboard>
-                    </ControlTemplate.Resources>
-
-                    <Grid x:Name="Root">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="1" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="6" />
-                            <RowDefinition Height="2" />
-                        </Grid.RowDefinitions>
-                        <Border x:Name="Border"  Margin="0,0,-1,0" Background="#ededed">
-                            <ContentPresenter x:Name="ContentSite"
-                                                  VerticalAlignment="Center"
-                                                  HorizontalAlignment="Center"
-                                                  ContentSource="Header"
-                                                  Margin="30,10,30,4"
-                                                  RecognizesAccessKey="True" />
-                        </Border>
-                        <Border Grid.Column="1" Margin="0,10,0,4" Background="#d6d6d6" />
-
-                        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#ededed"/>
-                        <Border Grid.Row="1" Grid.ColumnSpan="2" Name="border1Highlited" Background="Transparent"/>
-
-                        <Border Grid.Row="2" Grid.ColumnSpan="2" Background="#c9c9c9"/>
-                        <Border Grid.Row="2" Grid.ColumnSpan="2" Name="border2Highlited" Background="Transparent"/>
-
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Panel.ZIndex" Value="100" />
-                            <Setter TargetName="border1Highlited" Property="Background" Value="#f77f23" />
-                            <Setter TargetName="border2Highlited" Property="Background" Value="#d46d1e" />
-                            <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource StartAction}"/>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource ExitAction}"/>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="#cccccc" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="#FF474747"/>
+        <Setter Property="FontFamily" Value="Century Gothic" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisualStyte}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -167,8 +97,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Panel.ZIndex" Value="100" />
-                            <Setter TargetName="Border1Highlited" Property="Background" Value="#33b4ed" />
-                            <Setter TargetName="Border2Highlited" Property="Background" Value="#009de2" />
+                            <Setter TargetName="Border1Highlited" Property="Background" Value="Gray" />
+                            <Setter TargetName="Border2Highlited" Property="Background" Value="Gray" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard Storyboard="{StaticResource StartAction}"/>
                             </Trigger.EnterActions>
