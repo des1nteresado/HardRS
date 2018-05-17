@@ -85,6 +85,7 @@ D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.pdb
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.xml
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.Wpf.pdb
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\OxyPlot.Wpf.xml
-D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\RSSReader\RSSBase.mdf
-D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\RSSReader\RSSBase_log.ldf
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\TabControlStyle.baml
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\RSSReader\RSSDataBase.mdf
+D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\bin\Debug\RSSReader\RSSDataBase_log.ldf
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\obj\Debug\HardRS_Content.g.cs

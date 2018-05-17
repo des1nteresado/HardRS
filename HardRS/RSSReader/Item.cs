@@ -12,7 +12,8 @@ namespace HardRS.RSSReader
         public string Title { get; set; } //название статьи
         public string Link { get; set; } //ссылка
         public string Description { get; set; } //описание
-        public string PubDate { get; set; } //дата публикации
+        public DateTime PubDate { get; set; } //дата публикации
+
 
         public int? ChannelId { get; set; }
         public virtual Channel Channel { get; set; }
@@ -23,7 +24,6 @@ namespace HardRS.RSSReader
             Title = "";
             Link = "";
             Description = "";
-            PubDate = "";
         }
     }
 }

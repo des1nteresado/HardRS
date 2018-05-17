@@ -9,25 +9,46 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <Grid Background="LightGray">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
-        HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" />
-            <WebBrowser Grid.Column="2" Grid.Row="2" x:Name="Browser" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="-0.704,0.729" Margin="87,10,0,0"/>
-            <ListBox Grid.Column="0" Name="listBox1" Grid.Row="1" />
-        </Grid>
-        <Label Height="30" Grid.Row="1" Name="label1" Background="DodgerBlue"/>
-    </Grid>
+        <TabControl Background="LightGray" >
+            <TabItem Header="RSS">
+                        <Grid Background="LightGray">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <WebBrowser Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" x:Name="Browser"/>
+                            <Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" RenderTransformOrigin="-0.704,0.729" Margin="87,10,0,0"/>
+                            <Grid Grid.Column="0" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                            </Grid>
 
+                        </Grid>
+                    </TabItem>
+                    <TabItem  Header="Search">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Name="SearchBox" Grid.Row="0" VerticalContentAlignment="Center" FontSize="16" />
+                            <Button Name="SearchBut" Grid.Column="1" Grid.Row="0" Content="Search" Click="SearchBut_Click" />
+                            <WebBrowser Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="1" x:Name="SearchBrowser" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+        <Label Height="30" FontSize="16" Grid.Row="1" VerticalContentAlignment="Top" Name="label1" Background="DodgerBlue"/>
+    </Grid>
 </UserControl>

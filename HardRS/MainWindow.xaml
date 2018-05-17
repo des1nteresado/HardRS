@@ -9,14 +9,14 @@
         xmlns:rsr="clr-namespace:HardRS.RSSReader"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="510" Width="900" WindowStyle="ToolWindow">
+        Title="HardRS" Height="550" Width="900" WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="0" />
         </Grid.RowDefinitions>
-        <TabControl Background="LightGray" Margin="0,0,0,0.2" >
-            <TabItem Header="RSS">
+        <TabControl Style="{StaticResource TabControlStyle}" Background="LightGray" >
+            <TabItem Style="{StaticResource TabItemStyle}" Header="RSS Reader">
                 <TabItem.Content>
                     <Grid>
                         <rsr:RSSReaderView />
@@ -70,14 +70,14 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>-->
-            <TabItem Header="Hardware Info" >
+            <TabItem Style="{StaticResource TabItemStyle}" Header="Hardware Info" >
                 <TabItem.Content>
                     <Grid>
                         <hm:HardwareManagerView/>
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Header="TaskManager" Background="DeepPink">
+            <TabItem Style="{StaticResource TabItemStyle}" Header="Task Manager">
                 <TabItem.Content>
                     <Grid>
                         <tsk:TaskManagerView/>

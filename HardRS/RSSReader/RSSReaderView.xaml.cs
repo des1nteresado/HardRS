@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,19 +29,25 @@ namespace HardRS.RSSReader
         Channel channel = new Channel(); // объект класса Channel
         ChannelContext db;
         int ChannelId;
+        const string link = "https://news.tut.by/rss/42/devices_tehno.rss";
+
         public RSSReaderView()
         {
             InitializeComponent();
+
             db = new ChannelContext();
 
-            //https://news.tut.by/rss/42/videogames.rss
-            if (getNewArticles("https://news.tut.by/rss/42/devices_tehno.rss") == true && generateHtml() == true)
+            if (getNewArticles(link) == true && generateHtml() == true)
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
             }
 
         }
-     
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            db.Dispose();
+        }
 
         //Метод принимает в качестве параметра ссылку на RSS-поток,
         //и возвращает либо true при успешном выполнении,
@@ -167,7 +174,8 @@ namespace HardRS.RSSReader
                                 // Дата публикации сообщения.
                                 if (item.Name == "pubDate")
                                 {
-                                    articles[count].PubDate = item.InnerText;
+                                    ConvertToDateTime(item.InnerText, articles[count]);
+                                    //articles[count].PubDate = item.InnerText;
                                 }
                                 articles[count].ChannelId = channel.Id;
                             }
@@ -218,9 +226,7 @@ namespace HardRS.RSSReader
                 return false;
             }
         }
-        //Вывод полученных данных будет происходить
-        //в элементе управления WebBrowser. Все данные из RSS-потока
-        //будут сохранены в виде *.html файла, и последующей его загрузки. 
+
         bool hasEqualsChannel(Channel channel)
         {
             foreach (Channel ch in db.Channels.ToList())
@@ -243,15 +249,35 @@ namespace HardRS.RSSReader
             }
             return false;
         }
+
+        private static void ConvertToDateTime(string value, Item article)
+        {
+            DateTime convertedDate;
+            try
+            {
+                convertedDate = Convert.ToDateTime(value);
+                article.PubDate = convertedDate;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("'{0}' is not in the proper format.", value);
+            }
+        }
+
+        //Вывод полученных данных будет происходить
+        //в элементе управления WebBrowser. Все данные из RSS-потока
+        //будут сохранены в виде *.html файла, и последующей его загрузки. 
         bool generateHtml()
         {
+            //Переменная для подсчета количества и нумерации сообщений.
             try
             {
                 using (StreamWriter writer = new StreamWriter("last_articles.html", false, Encoding.Default))
                 {
+                    int countofel = 1;
                     List<Channel> channels = new List<Channel>(db.Channels.ToList());
                     List<Image> images = new List<Image>(db.Images.ToList());
-                    List<Item> items = new List<Item>(db.Items.ToList());
+                    List<Item> items = new List<Item>(db.Items.ToList().OrderByDescending(d => d.PubDate));
                     for (int i = 0; i < channels.Count; i++)
                     {
                         //Начало формирования HTML страницы.
@@ -264,7 +290,7 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</title>");
                         //Стили применяемые к странице.
                         writer.WriteLine("<style type=\"text/css\">");
-                        writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Verdana;}");
+                        writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Arial;}");
                         writer.WriteLine("pre{font-family:courier;color:#000000;");
                         writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
                         writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
@@ -274,13 +300,12 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</head>");
                         writer.WriteLine("<body>");
                         //Вставка изображения из сообщения.
-                        writer.WriteLine("<font size=\"2\" face=\"Verdana\">");
+                        writer.WriteLine("<font size=\"2\" face=\"Times New Roman\">");
                         writer.WriteLine("<a href=\"" + images[i].ImgLink + "\">");
                         writer.WriteLine("<img src=\"" + images[i].ImgURL + "\" border=0></a>  ");
                         //Вывод заголовка(гиперссылки) RSS-потока - источника.
                         writer.WriteLine("<h3>" + channels[i].Title + "</h3></a>");
-                        //Переменная для подсчета количества и нумерации сообщений.
-                        int countofel = 1;
+
                         writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");//border
                         foreach (Item article in items)
                         {
@@ -288,8 +313,8 @@ namespace HardRS.RSSReader
                             {
                                 writer.WriteLine("<tr>");
                                 writer.WriteLine("<td>");
-                                writer.WriteLine("<br>  <a href=\"" + article.Link + "\"><b>" + countofel + ". " + article.Title + "</b></a>");
-                                writer.WriteLine("& (" + article.PubDate + ")<br><br>");
+                                writer.WriteLine("<br><h3>  <a href=\"" + article.Link + "\"><b>" + countofel + ". " + article.Title + "</b></a></br>");
+                                writer.WriteLine(" (" + article.PubDate + ")<br><br>");
                                 writer.WriteLine("<table width=\"95 % \" align=\"center\" border=0>");
                                 writer.WriteLine("<tr><td>");
                                 writer.WriteLine(article.Description);
@@ -307,26 +332,11 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</font>");
                         writer.WriteLine("</body>");
                         writer.WriteLine("</html>");
+
                     }
 
-
-                    //Переменная для подсчета количества и нумерации сообщений.
-                    int count_element = 0;
-                    //Очистка listBox1 перед каждой загрузкой
-                    //заголовков сообщений.
-                    listBox1.Items.Clear();
-                    //Вставка сообщений в таблицу. 
-                    foreach (Item article in items)
-                    {
-                        //Вставка в listBox1 заголовков сообщений.                 
-                        listBox1.Items.Add((count_element + 1) + ". " + article.Title + " (" + article.PubDate + ")");
-                        //После вставки сообщения                 
-                        //увеличиваем счетчик сообщений на 1.                 
-                        count_element++;
-                    }
-                    //Вывод общего количества сообщений в label2.
-                    label1.Content = "Всего сообщений: " + count_element.ToString();
-
+                    //Вывод общего количества сообщений в label1.
+                    label1.Content = "Общее кол.во статей: " + (countofel - 1);
                     //Если все выполнено успешно, метод возвратит true.
                     return true;
                 }
@@ -340,9 +350,70 @@ namespace HardRS.RSSReader
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (getNewArticles("https://news.tut.by/rss/42/videogames.rss") == true && generateHtml() == true)
+            if (getNewArticles(link) == true && generateHtml() == true)
             {
                 Browser.Navigate(Environment.CurrentDirectory + "/last_articles.html");
+            }
+        }
+
+        private void SearchBut_Click(object sender, RoutedEventArgs e)
+        {
+            List<Item> items = new List<Item>(db.Items.ToList().OrderByDescending(d => d.PubDate));
+            List<Item> findItems = new List<Item>();
+            Regex regex = new Regex(@"" + SearchBox.Text + "(\\w*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            foreach (Item it in items)
+            {
+                if (regex.IsMatch(it.Title))
+                {
+                    findItems.Add(it);
+                }
+            }
+            GenerateSearchHtml(findItems);
+            SearchBrowser.Navigate(Environment.CurrentDirectory + "/search_articles.html");
+        }
+        private void GenerateSearchHtml(List<Item> items)
+        {
+
+            using (StreamWriter writer = new StreamWriter("search_articles.html", false, Encoding.Default))
+            {
+                int countofel = 1;
+                foreach (Item it in items)
+                {
+                    //Начало формирования HTML страницы.
+                    writer.WriteLine("<html>");
+                    writer.WriteLine("<head>");
+                    writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
+                    writer.WriteLine("<style type=\"text/css\">");
+                    writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Verdana;}");
+                    writer.WriteLine("pre{font-family:courier;color:#000000;");
+                    writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
+                    writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
+                    writer.WriteLine("border-bottom:1pt solid #87A5C3;border-left:1pt solid #87A5C3;");
+                    writer.WriteLine("border-right : 1pt solid #87A5C3;	text-align : left;}");
+                    writer.WriteLine("</style>");
+                    writer.WriteLine("</head>");
+                    writer.WriteLine("<body>");
+                    //Переменная для подсчета количества и нумерации сообщений.
+                    writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");//border
+                    writer.WriteLine("<tr>");
+                    writer.WriteLine("<td>");
+                    writer.WriteLine("<br>  <a href=\"" + it.Link + "\"><b>" + countofel + ". " + it.Title + "</b></a>");
+                    writer.WriteLine(" (" + it.PubDate + ")<br><br>");
+                    writer.WriteLine("<table width=\"95 % \" align=\"center\" border=0>");
+                    writer.WriteLine("<tr><td>");
+                    writer.WriteLine(it.Description);
+                    writer.WriteLine("</td></tr></table>");
+                    writer.WriteLine("<br>  <a href=\"" + it.Link + "\">");
+                    writer.WriteLine("<font size=\"4\">Читать далее > > ></font></a><br><br>");
+                    writer.WriteLine("</td>");
+                    writer.WriteLine("</tr>");
+                    writer.WriteLine("</table><br>");
+                    writer.WriteLine("</font>");
+                    writer.WriteLine("</body>");
+                    writer.WriteLine("</html>");
+                    countofel++;
+                }
+                label1.Content = "Кол.во найденных статей: " + (countofel - 1);
             }
         }
     }

@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\KURSOVOI\RSS-HARDWARE-UTILITY\HardRS\HardRS\App.xaml
-51070014214
-22066711500
+61201997716
+2454126510
 271066111370
 231533088166
-HardwareManager\HardwareManagerView.xaml;MainWindow.xaml;HardwareManager\StyleBar.xaml;RSSReader\RSSReaderView.xaml;TaskManager\TaskManagerView.xaml;
+HardwareManager\HardwareManagerView.xaml;MainWindow.xaml;HardwareManager\StyleBar.xaml;RSSReader\RSSReaderView.xaml;TabControlStyle.xaml;TaskManager\TaskManagerView.xaml;
 
 False
 

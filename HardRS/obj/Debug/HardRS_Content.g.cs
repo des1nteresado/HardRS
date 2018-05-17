@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("rssreader/rssbase.mdf")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("rssreader/rssbase_log.ldf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("rssreader/rssdatabase.mdf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("rssreader/rssdatabase_log.ldf")]
 
 
