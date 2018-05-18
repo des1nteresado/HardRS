@@ -18,20 +18,20 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="180" />
             </Grid.ColumnDefinitions>
             <TextBox Name="SearchBox" Grid.Row="0" VerticalContentAlignment="Center" FontSize="16" BorderBrush="#FF293955"/>
             <DockPanel Grid.Column="1" Grid.Row="0">
-                <Button Name="SearchBut" Click="SearchBut_Click" Background="Beige" BorderBrush="#FF293955">
+                <Button Name="SearchBut" Click="SearchBut_Click" Background="Beige" Width="88" BorderBrush="#FF293955">
                     <DockPanel>
-                        <TextBlock Text="Search" FontFamily="Century Gothic" VerticalAlignment="Center" FontSize="16"/>
-                        <Image Source="Images/search.png" Margin="1.5"/>
+                        <TextBlock Text="Search" FontFamily="Century Gothic" VerticalAlignment="Center" FontSize="15"/>
+                        <Image Source="../Images/search.png" Margin="1.5"/>
                     </DockPanel>
                 </Button>
                 <Button Name="RefreshBut" Click="Button_Click" Background="Beige" BorderBrush="#FF293955">
                     <DockPanel>
-                        <TextBlock Text="Refresh" FontFamily="Century Gothic" VerticalAlignment="Center" FontSize="16"/>
-                        <Image Source="Images/refresh.png" Margin="1.5"/>
+                        <TextBlock Text="Refresh" FontFamily="Century Gothic" VerticalAlignment="Center" FontSize="15"/>
+                        <Image Source="../Images/refresh.png" Margin="1.5"/>
                     </DockPanel>
                 </Button>
             </DockPanel>

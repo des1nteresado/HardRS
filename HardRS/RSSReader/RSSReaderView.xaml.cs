@@ -298,10 +298,11 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</title>");
                         //Стили применяемые к странице.
                         writer.WriteLine("<style type=\"text/css\">");
-                        writer.WriteLine("img{ border: 1px solid #ddd; border-radius: 4px; padding: 5px; width: 150px; height: auto;}");
-                        writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Arial;}");
-                        writer.WriteLine("body{ background-color: lightgray;}");
-                        writer.WriteLine("pre{font-family:courier;color:#000000;");
+                        writer.WriteLine("img{ width: 100 px; height: 100 px;}");
+                        writer.WriteLine("A{color:#483D8B; text-decoration:none; font:Century Gothic; font-weight:bold;}");
+                        writer.WriteLine("body{ background-color: beige;}");
+                        writer.WriteLine("p.date {text-align: right; font:Century Gothic; font-size:15; margin-right: 20px;}");
+                        writer.WriteLine("p.m {margin-left: 20px;}");
                         writer.WriteLine("background-color:#dfe2e5;padding-top:5pt;padding-left:5pt;");
                         writer.WriteLine("padding-bottom:5pt;border-top:1pt solid #87A5C3;");
                         writer.WriteLine("border-bottom:1pt solid #87A5C3;border-left:1pt solid #87A5C3;");
@@ -310,11 +311,11 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</head>");
                         writer.WriteLine("<body>");
                         //Вставка изображения из сообщения.
-                        writer.WriteLine("<font size=\"2\" face=\"Times New Roman\">");
-                        writer.WriteLine("<a href=\"" + images[i].ImgLink + "\">");
-                        writer.WriteLine("<img src=\"" + images[i].ImgURL + "\" border=0></a>  ");
+                        writer.WriteLine("<font size=\"2\" face=\"Century Gothic\">");
+                        //writer.WriteLine("<a href=\"" + images[i].ImgLink + "\">");
+                        //writer.WriteLine("<img src=\"" + images[i].ImgURL + "\" border=0></a>  ");
                         //Вывод заголовка(гиперссылки) RSS-потока - источника.
-                        writer.WriteLine("<h3>" + channels[i].Title + "</h3></a>");
+                        writer.WriteLine("<h3>" + channels[i].Title + "." + "</h3></a><br>");
 
                         writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");//border
                         foreach (Item article in items)
@@ -323,16 +324,16 @@ namespace HardRS.RSSReader
                             {
                                 writer.WriteLine("<tr>");
                                 writer.WriteLine("<td>");
-                                writer.WriteLine("<br><h3>  <a href=\"" + article.Link + "\"><b>" + countofel + ". " + article.Title + "</b></a></br>");
-                                writer.WriteLine(" (" + article.PubDate + ")<br><br>");
+                                writer.WriteLine("<br><h3>  <a href=\"" + article.Link + "\"><b>" + countofel + ". " + article.Title + "." + "</b></a></br><br>");
                                 writer.WriteLine("<table width=\"95 % \" align=\"center\" border=0>");
                                 writer.WriteLine("<tr><td>");
                                 writer.WriteLine(article.Description);
                                 writer.WriteLine("</td></tr></table>");
-                                writer.WriteLine("<br>  <a href=\"" + article.Link + "\">");
-                                writer.WriteLine("<font size=\"1\">Читать далее > > ></font></a><br><br>");
-                                writer.WriteLine("</td>");
-                                writer.WriteLine("</tr>");
+                                writer.Write("<a href=\"" + article.Link + "\">");
+                                writer.Write("<font size=\"2\"><p class=\"m\">Читать далее..</p></font></a>");
+                                writer.Write("<p class=\"date\">" + article.PubDate + "</p>");
+                                writer.Write("</td>");
+                                writer.Write("</tr>");
                                 countofel++;
                             }
                         }

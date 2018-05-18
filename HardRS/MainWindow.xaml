@@ -7,9 +7,12 @@
         xmlns:tsk="clr-namespace:HardRS.TaskManager"
         xmlns:hm="clr-namespace:HardRS.HardwareManager"
         xmlns:rsr="clr-namespace:HardRS.RSSReader"
-        
         mc:Ignorable="d"
-        Title="HardRS" Height="530" Width="900" WindowStyle="ToolWindow" Background="#FF293955">
+        Title="HardRS" Height="530" Width="900"
+        WindowStyle="ToolWindow"  Icon="/Images/label.png"
+        FontFamily="Century Gothic"
+        FontSize="16"
+        Background="#FF293955">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
