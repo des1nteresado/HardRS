@@ -57,7 +57,14 @@ namespace HardRS.HardwareManager.Classes
             }
             set
             {
-                progressHDD = value;
+                if(value > 100)
+                {
+                    progressHDD = 100;
+                }
+                else
+                {
+                    progressHDD = value;
+                }
 
                 if (PropertyChanged != null)
                 {

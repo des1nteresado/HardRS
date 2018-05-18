@@ -66,6 +66,7 @@
             <Label Grid.Row="0" FontSize="18" Content="Storage Usage" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <cpb:CircularProgressBar Grid.Row="1" StrokeThickness="5" Radius="70"
                                  Background="DarkRed"
+                                 Maximum="100"
                                  Value="{Binding Progress.ProgressHDD}" 
                                  Text="{Binding Progress.ProgressHDDText, Mode=OneWay}"
                                  Style="{StaticResource CircularProgressBarStyle}" />

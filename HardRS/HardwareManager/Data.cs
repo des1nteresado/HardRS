@@ -1,6 +1,7 @@
 ﻿using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using static HardRS.HardwareManager.HManagerViewModel;
 
 namespace HardRS.HardwareManager
@@ -119,15 +120,22 @@ namespace HardRS.HardwareManager
                             {
                                 MaxTemp.MTemp += "Max " + "Storage" + ": " + MaxTemp.MTemps[counter] + "\n";
                             }
-                            measurements.Add(new Measurement()
+                            try
                             {
-                                DetectorId = counter,
-                                DateTime = dateTime.AddSeconds(1),
-                                Value = (int)computer.Hardware[i].Sensors[j].Value,
-                                Name = computer.Hardware[i].Sensors[j].Name
-                            });
-                            counter++;
-                            t += "Storage" + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                measurements.Add(new Measurement()
+                                {
+                                    DetectorId = counter,
+                                    DateTime = dateTime.AddSeconds(1),
+                                    Value = (int)computer.Hardware[i].Sensors[j].Value,
+                                    Name = computer.Hardware[i].Sensors[j].Name
+                                });
+                                counter++;
+                                t += "Storage" + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            }
+                            catch(Exception e)
+                            {
+                                MessageBox.Show("Диск сильно нагружен! " + e.Message);
+                            }
                         }
                     }
                 }
