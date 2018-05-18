@@ -17,7 +17,7 @@ namespace HardRS.HardwareManager
 {
     public class HManagerViewModel : INotifyPropertyChanged
     {
-        //private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
+        private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
 
         #region классы для получения инфы о системе
         ManagementObjectSearcher videoSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
@@ -27,7 +27,7 @@ namespace HardRS.HardwareManager
         #endregion
         public List<Hardware> HardwareList;
         public Progress Progress { get; set; }
-
+        public int counter = 0;
         private string temp;
         public string Temp
         {
@@ -97,7 +97,7 @@ namespace HardRS.HardwareManager
             var endDate = DateTime.Now;
             double minDate = DateTimeAxis.ToDouble(DateTime.Now);
             //Вертикальная вид линии решетки      //Горизонтальная
-            var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm:ss") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Minimum = minDate, IntervalLength = 60 };
+            var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm:ss") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, IntervalLength = 60 };
             PlotModel.Axes.Add(dateAxis);
             var valueAxis = new LinearAxis(AxisPosition.Left, 30) { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Maximum = 100, Title = "Value" };
             PlotModel.Axes.Add(valueAxis);
@@ -127,17 +127,8 @@ namespace HardRS.HardwareManager
 
         public void UpdateModel()
         {
+            
             List<Measurement> measurements = Data.GetUpdateData(lastUpdate);
-            if (PlotModel.Series.Count >= 4)
-            {
-                PlotModel.Axes.Clear();
-                double minDate = DateTimeAxis.ToDouble(DateTime.Now);
-                //Вертикальная вид линии решетки      //Горизонтальная
-                var dateAxis = new DateTimeAxis(AxisPosition.Bottom, "Date", "HH:mm:ss") { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Minimum = minDate, IntervalLength = 60 };
-                PlotModel.Axes.Add(dateAxis);
-                var valueAxis = new LinearAxis(AxisPosition.Left, 30) { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Maximum = 100, Title = "Value" };
-                PlotModel.Axes.Add(valueAxis);
-            }
             Temp = measurements[0].Temp;
             MTemp = MaxTemp.MTemp;
             foreach (var m in measurements)
@@ -170,6 +161,11 @@ namespace HardRS.HardwareManager
                 }
             }
             lastUpdate = DateTime.Now;
+            for(int i = 0; i < PlotModel.Series.Count; i++)
+            {
+                if ((PlotModel.Series[i] as LineSeries).Points.Count > 10) //show only 10 last points 
+                    (PlotModel.Series[i] as LineSeries).Points.RemoveAt(0); //remove first point 
+            }
         }
 
         public HManagerViewModel()
@@ -229,8 +225,8 @@ namespace HardRS.HardwareManager
                 });
             }
             #endregion
-            //_bgWorker.WorkerSupportsCancellation = true;
-            //_bgWorker.CancelAsync();
+            _bgWorker.WorkerSupportsCancellation = true;
+            _bgWorker.CancelAsync();
 
             DispatcherTimer timer = new DispatcherTimer();
             timer.Tick += new EventHandler(Timer_Tick);
@@ -273,21 +269,25 @@ namespace HardRS.HardwareManager
             };
             #endregion
             #region Значения баров
-            //try
-            //{
-            //    _bgWorker.RunWorkerAsync();
-            //}
-            //finally
-            //{
-            //    _bgWorker.WorkerSupportsCancellation = true;
-            //    _bgWorker.CancelAsync();
-            //}
-            // _bgWorker.DoWork += (s, e) =>
-            // {
-            Progress.ProgressCPU = (int)cpuCounter.NextValue();
-            Progress.ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
-            Progress.ProgressHDD = (int)hddCounter.NextValue();
-            // };
+            try
+            {
+                _bgWorker.RunWorkerAsync();
+            }
+            catch (Exception e)
+            {
+                _bgWorker.WorkerSupportsCancellation = true;
+                _bgWorker.CancelAsync();
+            }
+            _bgWorker.DoWork += (s, e) =>
+            {
+                Progress.ProgressCPU = (int)cpuCounter.NextValue();
+                Progress.ProgressMEM = (int)memCounter.NextValue(); // = Used + Cashed
+                Progress.ProgressHDD = (int)hddCounter.NextValue();
+                if (_bgWorker.CancellationPending)
+                {
+                    e.Cancel = true;
+                }
+            };
             #endregion
         }
 

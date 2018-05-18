@@ -34,12 +34,6 @@
                 </TabItem.Content>
             </TabItem>
             <TabItem Style="{StaticResource TabItemStyle}" Header="Task Manager">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
-                        <GradientStop Color="#FFFFF29D" Offset="1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
                 <TabItem.Content>
                     <Grid Background="LightGray">
                         <tsk:TaskManagerView VerticalAlignment="Center"/>
