@@ -5,23 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 
 namespace HardRS.RSSReader
 {
-    /// <summary>
-    /// Логика взаимодействия для RSSReaderView.xaml
-    /// </summary>
     public partial class RSSReaderView : UserControl
     {
         Image imageChannel = new Image(); // объект класса рисунка
@@ -57,21 +46,11 @@ namespace HardRS.RSSReader
             db.Dispose();
         }
 
-        //Метод принимает в качестве параметра ссылку на RSS-поток,
-        //и возвращает либо true при успешном выполнении,
-        //либо false при неудачной попытке.       
         bool getNewArticles(string fileSource)
         {
-            //Весь код помещен в try...catch
-            //для отслеживания  исключений
-            // и вывода их в виде сообщения.
             try
             {
-                //Для предотвращения ошибки 407 (Удаленный сервер возвратил ошибку: 
-                //(407) Требуется проверка подлинности посредника)
-                //в сетях с прокси сервером 
-                //загрузка RSS ленты осуществляется через класс WebRequest
-                //с указанием настроек прокси.
+                //Для предотвращения ошибки 407 (Удаленный сервер возвратил ошибку)
                 WebRequest wr = WebRequest.Create(fileSource);
 
                 //Указываем системные учетные данные приложения,
@@ -81,32 +60,17 @@ namespace HardRS.RSSReader
 
                 //Инициализируем класс XmlTextReader, который
                 //обеспечивает прямой доступ (только для чтения) к потокам данных XML.
-                //и передаем ему экземпляр класса System.IO.Stream(GetResponseStream)
-                //для чтения данных из интернет-ресурса.
                 XmlTextReader xtr = new XmlTextReader(wr.GetResponse().GetResponseStream());
 
-                //Инициализируем класс "XmlDocument". Который представляет XML-документ
-                //и включает в себя метод "Load",
-                //предназначенный для загрузки документа 
-                //с помощью объекта "XMLReader". 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(xtr);
 
 
-                //XmlNode root - содержит корневой элемент XML для 
-                //загруженного элемента.
                 XmlNode root = doc.DocumentElement;
                 //Получаем количество элементов item в RSS-потоке,
-                //используя SelectNodes() и
-                //выражение XPath, которое позволяет это сделать.
                 articles = new Item[root.SelectNodes("channel/item").Count];
-                // Инициализируем класс System.Xml.XmlNodeList, 
-                //содержащий все дочерние узлы данного потока (channel).
                 XmlNodeList nodeList;
                 nodeList = root.ChildNodes;
-
-                //Индикатор числового типа,
-                //для массива articles[].
                 int count = 0;
 
                 //Цикл для прохода по всем каналам в RSS-потоке.
@@ -194,12 +158,6 @@ namespace HardRS.RSSReader
                         }
                     }
                 }
-                //После выполнения этого метода, 
-                //объекты классов, будут заполнены данными. 
-                //В imageChanel содержатся все данные о рисунке (если он есть),
-                //В channel - все параметры канала,
-                //Массив articles - будет содержать все сообщения.  
-                //И метод возвратит значение true.
                 if (!hasEqualsChannel(channel))//проверяем на аналогичный канал
                 {
                     db.Channels.Add(channel);
@@ -272,12 +230,8 @@ namespace HardRS.RSSReader
             }
         }
 
-        //Вывод полученных данных будет происходить
-        //в элементе управления WebBrowser. Все данные из RSS-потока
-        //будут сохранены в виде *.html файла, и последующей его загрузки. 
         bool generateHtml()
         {
-            //Переменная для подсчета количества и нумерации сообщений.
             try
             {
                 using (StreamWriter writer = new StreamWriter("last_articles.html", false, Encoding.Default))
@@ -288,12 +242,10 @@ namespace HardRS.RSSReader
                     List<Item> items = new List<Item>(db.Items.ToList().OrderByDescending(d => d.PubDate));
                     for (int i = 0; i < channels.Count; i++)
                     {
-                        //Начало формирования HTML страницы.
                         writer.WriteLine("<html>");
                         writer.WriteLine("<head>");
                         writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
                         writer.WriteLine("<title>");
-                        //Создание элемента
                         writer.WriteLine(channels[i].Title);
                         writer.WriteLine("</title>");
                         //Стили применяемые к странице.
@@ -345,10 +297,8 @@ namespace HardRS.RSSReader
                         writer.WriteLine("</html>");
 
                     }
-
                     //Вывод общего количества сообщений в label1.
                     label1.Content = "Общее кол.во статей: " + (countofel - 1);
-                    //Если все выполнено успешно, метод возвратит true.
                     return true;
                 }
             }
@@ -398,7 +348,6 @@ namespace HardRS.RSSReader
                 int countofel = 1;
                 foreach (Item it in items)
                 {
-                    //Начало формирования HTML страницы.
                     writer.WriteLine("<html>");
                     writer.WriteLine("<head>");
                     writer.WriteLine("<meta http-equiv=\"content-type\" content=\"text / html; charset = \"utf - 8\">");
@@ -413,7 +362,6 @@ namespace HardRS.RSSReader
                     writer.WriteLine("</style>");
                     writer.WriteLine("</head>");
                     writer.WriteLine("<body>");
-                    //Переменная для подсчета количества и нумерации сообщений.
                     writer.WriteLine("<table width=\"80 % \" align=\"center\" border=1>");//border
                     writer.WriteLine("<tr>");
                     writer.WriteLine("<td>");

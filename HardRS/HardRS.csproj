@@ -110,9 +110,9 @@
     <Compile Include="HardwareManager\Classes\VideoController.cs" />
     <Compile Include="HardwareManager\Converters.cs" />
     <Compile Include="HardwareManager\Data.cs" />
-    <Compile Include="HardwareManager\Hardware.cs" />
-    <Compile Include="HardwareManager\HardwareManagerView.xaml.cs">
-      <DependentUpon>HardwareManagerView.xaml</DependentUpon>
+    <Compile Include="HardwareManager\Classes\Hardware.cs" />
+    <Compile Include="HardwareManager\HManagerView.xaml.cs">
+      <DependentUpon>HManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="HardwareManager\HManagerViewModel.cs" />
     <Compile Include="HardwareManager\Classes\Processor.cs" />
@@ -128,7 +128,7 @@
       <DependentUpon>TaskManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaskManager\ViewModel.cs" />
-    <Page Include="HardwareManager\HardwareManagerView.xaml">
+    <Page Include="HardwareManager\HManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,7 +162,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="mvvmSup\CommandHandler.cs" />
     <Compile Include="TaskManager\ProcessListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
