@@ -49,14 +49,29 @@ namespace HardRS.HardwareManager
                     {
                         if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
                         {
-                            t += computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            if (computer.Hardware[i].Sensors[j].Name.Contains("CPU Package"))
+                            {
+                                t += "Cpu Total: " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                            }
+                            else
+                                t += computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                             if (MaxTemp.MTemps[counter] < computer.Hardware[i].Sensors[j].Value)
                             {
                                 MaxTemp.MTemps[counter] = (int)computer.Hardware[i].Sensors[j].Value;
-                                MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                if (computer.Hardware[i].Sensors[j].Name.Contains("CPU Package"))
+                                {
+                                    MaxTemp.MTemp += "Max " + "Cpu Total: " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
+                                }
+                                else
+                                    MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
                             }
                             else
                             {
+                                if (computer.Hardware[i].Sensors[j].Name.Contains("CPU Package"))
+                                {
+                                    MaxTemp.MTemp += "Max " + "Cpu Total: " + MaxTemp.MTemps[counter] + "\n";
+                                }
+                                else
                                 MaxTemp.MTemp += "Max " + computer.Hardware[i].Sensors[j].Name + ": " + MaxTemp.MTemps[counter] + "\n";
                             }
                         }
