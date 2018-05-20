@@ -19,7 +19,7 @@ namespace HardRS.HardwareManager
     {
         private BackgroundWorker _bgWorker = new BackgroundWorker(); //async-worker
 
-        #region классы для получения инфы о системе
+        #region объекты для получения инфы о системе
         ManagementObjectSearcher videoSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
         ManagementObjectSearcher processorSrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
         ManagementObjectSearcher memorySrch = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
@@ -84,7 +84,6 @@ namespace HardRS.HardwareManager
                                                        MarkerType.Triangle,
                                                        MarkerType.Cross
                                                    };
-
 
         private void SetUpModel()
         {
@@ -225,6 +224,7 @@ namespace HardRS.HardwareManager
                 });
             }
             #endregion
+
             _bgWorker.WorkerSupportsCancellation = true;
             _bgWorker.CancelAsync();
 
@@ -273,7 +273,7 @@ namespace HardRS.HardwareManager
             {
                 _bgWorker.RunWorkerAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _bgWorker.WorkerSupportsCancellation = true;
                 _bgWorker.CancelAsync();
@@ -321,8 +321,7 @@ namespace HardRS.HardwareManager
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

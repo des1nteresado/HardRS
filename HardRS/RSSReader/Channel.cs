@@ -26,6 +26,5 @@ namespace HardRS.RSSReader
         {
             return Title;
         }
-       
     }
 }

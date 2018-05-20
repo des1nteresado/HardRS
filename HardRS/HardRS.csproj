@@ -103,18 +103,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HardwareManager\CircularProgressBar.cs" />
-    <Compile Include="HardwareManager\Classes\DiskDrive.cs" />
-    <Compile Include="HardwareManager\Classes\Memory.cs" />
-    <Compile Include="HardwareManager\Classes\Progress.cs" />
-    <Compile Include="HardwareManager\Classes\VideoController.cs" />
+    <Compile Include="HardwareManager\Models\DiskDrive.cs" />
+    <Compile Include="HardwareManager\Models\Memory.cs" />
+    <Compile Include="HardwareManager\Models\Progress.cs" />
+    <Compile Include="HardwareManager\Models\VideoController.cs" />
     <Compile Include="HardwareManager\Converters.cs" />
-    <Compile Include="HardwareManager\Data.cs" />
-    <Compile Include="HardwareManager\Classes\Hardware.cs" />
+    <Compile Include="HardwareManager\Models\Data.cs" />
+    <Compile Include="HardwareManager\Models\Hardware.cs" />
     <Compile Include="HardwareManager\HManagerView.xaml.cs">
       <DependentUpon>HManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="HardwareManager\HManagerViewModel.cs" />
-    <Compile Include="HardwareManager\Classes\Processor.cs" />
+    <Compile Include="HardwareManager\Models\Processor.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RSSReader\Channel.cs" />
     <Compile Include="RSSReader\ChannelContext.cs" />

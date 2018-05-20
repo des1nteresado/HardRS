@@ -63,13 +63,13 @@ namespace HardRS.TaskManager
 
             foreach (var p in Process.GetProcesses())
             {
-                if (!currentIds.Remove(p.Id)) // it's a new process id
+                if (!currentIds.Remove(p.Id)) // новый процесс
                 {
                     Processes.Add(new ProcessListItem(p));
                 }
             }
 
-            foreach (var id in currentIds) // these do not exist any more
+            foreach (var id in currentIds) // если больше не существует
             {
                 var process = Processes.First(p => p.Id == id);
                 if (process.KeepAlive)

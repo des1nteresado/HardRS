@@ -14,10 +14,8 @@ namespace HardRS.RSSReader
         public string Description { get; set; } //описание
         public DateTime PubDate { get; set; } //дата публикации
 
-
         public int? ChannelId { get; set; }
         public virtual Channel Channel { get; set; }
-
 
         public Item()
         {

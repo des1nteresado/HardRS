@@ -19,7 +19,6 @@ namespace HardRS.HardwareManager
             InitializeComponent();
         }
 
-        private long frameCounter;
         private Stopwatch stopwatch = new Stopwatch();
         private long lastUpdateMilliSeconds;
 

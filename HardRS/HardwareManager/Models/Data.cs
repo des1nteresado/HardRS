@@ -142,7 +142,7 @@ namespace HardRS.HardwareManager
                                     DetectorId = counter,
                                     DateTime = dateTime.AddSeconds(1),
                                     Value = (int)computer.Hardware[i].Sensors[j].Value,
-                                    Name = computer.Hardware[i].Sensors[j].Name
+                                    Name = "Storage " + computer.Hardware[i].Sensors[j].Name
                                 });
                                 counter++;
                                 t += "Storage" + ": " + computer.Hardware[i].Sensors[j].Value.ToString() + "\n";
