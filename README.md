@@ -1,4 +1,5 @@
 # HardRS
+Desktop application for Windows.
 
 ### Hardware info
 #### At this page we can view system information and temperature of the hardware sensors.
